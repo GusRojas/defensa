@@ -1,0 +1,62 @@
+================================================================================
+RESUMEN DE EVALUACIÓN DE MODELOS
+================================================================================
+
+Total de modelos evaluados: 10
+Total de muestras de test: 5086
+
+RANKING DE MODELOS (por RMSE):
+--------------------------------------------------------------------------------
+7. DroneMobileNetV3_large
+   RMSE: 0.371713
+   MAE:  0.214392
+   R²:   0.853387
+
+4. DroneNavSA-ConvLSTM_ligero
+   RMSE: 0.374792
+   MAE:  0.229984
+   R²:   0.851416
+
+6. PilotNetRegressor
+   RMSE: 0.375366
+   MAE:  0.221601
+   R²:   0.850739
+
+3. DroneNavSA-ConvLSTM_completo
+   RMSE: 0.377406
+   MAE:  0.233807
+   R²:   0.849804
+
+9. DroneResNet18
+   RMSE: 0.381549
+   MAE:  0.215093
+   R²:   0.845944
+
+2. DroneNav-ConvLSTM
+   RMSE: 0.382869
+   MAE:  0.235530
+   R²:   0.844988
+
+8. DroneMobileNetV3_small
+   RMSE: 0.390511
+   MAE:  0.233546
+   R²:   0.838471
+
+10. MLP
+   RMSE: 0.399220
+   MAE:  0.250615
+   R²:   0.830671
+
+1. ConvLSTM
+   RMSE: 0.407286
+   MAE:  0.255513
+   R²:   0.823302
+
+5. DroneConvMLP
+   RMSE: 0.428814
+   MAE:  0.270816
+   R²:   0.803566
+
+================================================================================
+MEJOR MODELO: DroneMobileNetV3_large
+================================================================================

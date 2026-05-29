@@ -1,0 +1,20 @@
+{
+  "hardware_name": "Raspberry Pi 5",
+  "hardware_type": "rpi5",
+  "execution_provider": "CPUExecutionProvider",
+  "total_samples": 5086,
+  "batch_size": 32,
+  "models_evaluated": [
+    "ConvLSTM",
+    "DroneNav-ConvLSTM",
+    "DroneNavSA-ConvLSTM_completo",
+    "DroneNavSA-ConvLSTM_ligero",
+    "MLP",
+    "ConvMLP",
+    "DroneMobileNetV3_large",
+    "DroneMobileNetV3_small",
+    "PilotNetRegressor",
+    "DroneResNet18"
+  ],
+  "evaluation_date": "2026-05-27T23:33:26.206357"
+}
