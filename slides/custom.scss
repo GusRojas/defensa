@@ -1,0 +1,148 @@
+/*-- scss:defaults --*/
+
+// Tipografía institucional
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
+// Paleta institucional (de PuertaAbierta.html)
+$ipn-guinda: #7A1C3C;
+$cic-azul:   #1C3D7A;
+$verde-res:  #1A6B3A;
+$ambar:      #B8860B;
+$bg-alt:     #F0F4FA;
+
+// Variables de Reveal.js / tema
+$body-color:                      #222222;
+$link-color:                      $cic-azul;
+$presentation-font-family:        'Inter', 'Calibri', sans-serif;
+$presentation-heading-font:       'Inter', 'Calibri', sans-serif;
+$presentation-heading-color:      $ipn-guinda;
+$presentation-heading-font-weight: 800;
+
+/*-- scss:rules --*/
+
+// Línea guinda decorativa bajo cada título de diapositiva
+.reveal .slides section h2 {
+  border-bottom: 5px solid #{$ipn-guinda};
+  padding-bottom: 0.25em;
+  margin-bottom: 0.6em;
+}
+
+// Tablas: encabezado guinda, filas alternas
+.reveal table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.reveal table thead th {
+  background-color: #{$ipn-guinda};
+  color: #fff;
+  border: none;
+  text-align: left;
+}
+.reveal table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+.reveal table td {
+  border-bottom: 2px solid #ddd;
+}
+
+// Clases utilitarias de color (reutilizadas del original)
+.text-guinda { color: #{$ipn-guinda}; }
+.text-azul   { color: #{$cic-azul}; }
+.text-verde  { color: #{$verde-res}; }
+.text-ambar  { color: #{$ambar}; }
+
+// Cajas con borde de color para diagramas (I/O, TRL)
+.box-card {
+  border-radius: 16px;
+  padding: 0.8em 1em;
+  border: 3px solid #ccc;
+  height: 100%;
+}
+.box-card h3, .box-card h4 { margin-top: 0; text-align: center; }
+
+// Título de caja sin usar encabezados (evita generar <section> que rompen la navegación)
+.box-head {
+  display: block;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 0.4em;
+  font-size: 1.15em;
+}
+
+.card-azul  { border-color: #{$cic-azul};  background-color: #{$bg-alt}; }
+.card-azul  h3, .card-azul  h4, .card-azul  .box-head { color: #{$cic-azul}; }
+.card-verde { border-color: #{$verde-res}; background-color: #EAF7EF; }
+.card-verde h3, .card-verde h4, .card-verde .box-head { color: #{$verde-res}; }
+.card-ambar { border-color: #{$ambar};     background-color: #FDF8EA; }
+.card-ambar h3, .card-ambar h4, .card-ambar .box-head { color: #{$ambar}; }
+.card-model { border: 3px dashed #555;     background-color: #f5f5f5; text-align: center; }
+
+// Cita de hipótesis destacada
+.reveal blockquote.hipotesis {
+  background-color: #{$bg-alt};
+  border-left: 6px solid #{$cic-azul};
+  border-radius: 8px;
+  color: #{$cic-azul};
+  font-weight: 600;
+  padding: 0.8em 1em;
+  width: 100%;
+}
+
+// Fórmula del criterio de eficiencia
+.formula-box {
+  background-color: #{$bg-alt};
+  border: 3px solid #{$cic-azul};
+  border-radius: 16px;
+  padding: 0.6em;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+// Cabecera de columna TRL
+.trl-header {
+  border-radius: 8px;
+  color: #fff;
+  text-align: center;
+  font-weight: bold;
+  padding: 0.3em;
+  margin-bottom: 0.5em;
+}
+.trl-header.h4 { background-color: #{$verde-res}; }
+.trl-header.h5 { background-color: #{$cic-azul}; }
+.trl-header.h6 { background-color: #{$ambar}; }
+
+// Slides densas (7 y 11): que el contenido no se desborde sin apretar de más
+.reveal .slides section.slide-densa {
+  font-size: 0.85em;            // escala global de la slide
+}
+.reveal .slides section.slide-densa .box-card {
+  padding: 0.6em 0.8em;        // menos relleno que el .box-card global (0.8em 1em)
+}
+.reveal .slides section.slide-densa ul {
+  margin: 0.3em 0;
+}
+.reveal .slides section.slide-densa li {
+  line-height: 1.25;
+  margin-bottom: 0.2em;
+}
+.reveal .slides section.slide-densa .trl-header {  // slide 11
+  padding: 0.2em;
+  margin-bottom: 0.35em;
+}
+.reveal .slides section.slide-densa .callout {     // slide 7 (callout-important)
+  margin-top: 0.6em;
+  font-size: 0.95em;
+}
+.reveal .slides section.slide-densa table {        // slides 8 y 9 (tablas)
+  font-size: 0.9em;
+}
+.reveal .slides section.slide-densa table th,
+.reveal .slides section.slide-densa table td {
+  padding: 0.2em 0.5em;        // filas más compactas sin pegar el texto
+  line-height: 1.25;
+}
+.reveal .slides section.slide-densa .formula-box {  // slide 10
+  padding: 0.45em;
+  margin: 0.5em 0;
+}

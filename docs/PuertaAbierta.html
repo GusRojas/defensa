@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defensa de Tesis - Gustavo Mandujano Rojas</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+        
+        :root {
+            --ipn-guinda: #7A1C3C;
+            --cic-azul: #1C3D7A;
+            --verde-res: #1A6B3A;
+            --text-dark: #222222;
+            --text-light: #555555;
+            --bg-color: #FFFFFF;
+            --bg-alt: #F0F4FA;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Inter', 'Calibri', sans-serif;
+            background-color: #111;
+            color: var(--text-dark);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #presentation-container {
+            width: 1920px;
+            height: 1080px;
+            background-color: var(--bg-color);
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            overflow: hidden;
+            transform-origin: center center;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            padding: 100px 120px;
+            display: none;
+            flex-direction: column;
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out;
+            background-color: #ffffff;
+        }
+        
+        .slide.active {
+            display: flex;
+            opacity: 1;
+            z-index: 5;
+        }
+
+        /* Slide Layouts */
+        .title-slide { justify-content: center; align-items: center; text-align: center; }
+        .title-slide h1 { color: var(--ipn-guinda); font-size: 72px; margin-bottom: 20px; font-weight: 800; line-height: 1.2; }
+        .title-slide h2 { color: var(--text-dark); font-size: 40px; margin-bottom: 40px; font-weight: 400; }
+        .title-slide .authors { color: var(--text-light); font-size: 32px; margin-bottom: 40px; }
+        .title-slide .footer { color: var(--text-light); font-size: 24px; position: absolute; bottom: 80px; }
+        
+        .header-line { width: 100%; height: 6px; background-color: var(--ipn-guinda); margin-bottom: 40px; }
+        .slide-title { color: var(--ipn-guinda); font-size: 56px; font-weight: 800; margin-bottom: 20px; }
+        
+        /* Typography */
+        p, li { font-size: 32px; line-height: 1.6; margin-bottom: 20px; }
+        ul { padding-left: 40px; margin-bottom: 30px; }
+        .text-center { text-align: center; }
+        .text-guinda { color: var(--ipn-guinda); }
+        .text-azul { color: var(--cic-azul); }
+        .text-verde { color: var(--verde-res); }
+        
+        /* Specific layouts */
+        .content { flex: 1; display: flex; flex-direction: column; }
+        .two-cols { display: flex; gap: 60px; height: 100%; flex: 1; margin-top: 20px; }
+        .col { flex: 1; display: flex; flex-direction: column; }
+        
+        .box { background-color: var(--bg-alt); border: 3px solid var(--cic-azul); border-radius: 16px; padding: 40px; margin-bottom: 30px; }
+        .box-title { color: var(--cic-azul); font-size: 36px; font-weight: 800; margin-bottom: 20px; text-align: center; }
+        
+        .box-green { background-color: #EAF7EF; border-color: var(--verde-res); }
+        .box-green .box-title { color: var(--verde-res); }
+
+        .box-yellow { background-color: #FDF8EA; border-color: #B8860B; }
+        .box-yellow .box-title { color: #B8860B; }
+
+        .table-wrapper { width: 100%; display: flex; align-items: center; justify-content: center; margin-top: 20px; }
+        table { width: 100%; border-collapse: collapse; font-size: 26px; }
+        th { background-color: var(--ipn-guinda); color: white; padding: 15px; text-align: left; }
+        td { border-bottom: 2px solid #ddd; padding: 15px; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+
+        /* Diagrams */
+        .diagram-row { display: flex; justify-content: space-between; align-items: stretch; margin-top: 40px; gap: 20px; flex: 1; }
+        .arrow { font-size: 80px; color: var(--ipn-guinda); font-weight: bold; display: flex; align-items: center; }
+        .io-box { flex: 1; border-radius: 16px; padding: 30px; border: 3px solid; display: flex; flex-direction: column; justify-content: center; }
+        .io-box h3 { font-size: 36px; margin-bottom: 30px; text-align: center; }
+        .io-box p { font-size: 26px; margin-bottom: 10px; }
+        .io-box.input { border-color: var(--cic-azul); background-color: var(--bg-alt); }
+        .io-box.input h3 { color: var(--cic-azul); }
+        .io-box.model { border-color: #555; border-style: dashed; align-items: center; text-align: center; background-color: #f5f5f5;}
+        .io-box.output { border-color: var(--verde-res); background-color: #EAF7EF; }
+        .io-box.output h3 { color: var(--verde-res); font-size: 48px; }
+        .output-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; margin-top: 20px; }
+        .out-var { border: 2px solid var(--verde-res); padding: 15px; border-radius: 8px; background: white; font-size: 28px; text-align: center;}
+        .out-var strong { color: var(--verde-res); }
+
+        .trl-diagram { display: flex; justify-content: space-between; gap: 20px; height: 100%; margin-top: 30px;}
+        .trl-col { flex: 1; border: 4px solid; border-radius: 16px; padding: 30px; display: flex; flex-direction: column;}
+        .trl-col.c4 { border-color: var(--verde-res); background-color: #EAF7EF; }
+        .trl-col.c5 { border-color: var(--cic-azul); background-color: var(--bg-alt); }
+        .trl-col.c6 { border-color: #B8860B; background-color: #FDF8EA; }
+        .trl-header { padding: 15px; border-radius: 8px; color: white; text-align: center; font-size: 36px; font-weight: bold; margin-bottom: 20px; }
+        .trl-col.c4 .trl-header { background-color: var(--verde-res); }
+        .trl-col.c5 .trl-header { background-color: var(--cic-azul); }
+        .trl-col.c6 .trl-header { background-color: #B8860B; }
+        .trl-col ul { margin-top: 20px; font-size: 28px;}
+        .trl-col li { margin-bottom: 15px; font-size: 26px;}
+
+        .warning-box { background-color: #fff3cd; color: #856404; padding: 20px; border-left: 6px solid #ffeeba; border-radius: 4px; margin-top: auto; font-size: 28px;}
+
+        /* Controls and UI */
+        #progress-bar { position: absolute; bottom: 0; left: 0; height: 8px; background-color: var(--ipn-guinda); transition: width 0.3s; width: 0%; z-index: 1000; }
+        .slide-number { position: absolute; bottom: 30px; right: 40px; font-size: 24px; color: var(--text-light); z-index: 1000;}
+        .logos { position: absolute; top: 40px; left: 120px; right: 120px; display: flex; justify-content: space-between; align-items: center; z-index: 10; font-size: 24px; color: #555; font-weight: bold; }
+        .help-text { position: absolute; bottom: 30px; left: 40px; font-size: 20px; color: #999; z-index: 1000; }
+
+    </style>
+</head>
+<body>
+
+    <div id="presentation-container">
+        
+        <!-- Slide 1: Portada -->
+        <div class="slide title-slide active">
+            <div class="logos">
+                <span>IPN</span>
+                <span>CIC</span>
+            </div>
+            <div class="header-line" style="width: 800px; margin: 0 auto 40px auto;"></div>
+            <h1>Sistema de visión para navegación<br>autónoma de dron de ala fija</h1>
+            <div class="header-line" style="width: 800px; margin: 0 auto 40px auto;"></div>
+            <p class="authors" style="margin-top: 40px;"><b>Presenta:</b> Ing. Gustavo Mandujano Rojas</p>
+            <p class="authors"><b>Directores:</b> Dr. Juan Humberto Sossa Azuela · Dr. Erik Zamora Gómez</p>
+            <div class="footer">Maestría en Ciencias en Ingeniería de Cómputo — CIC-IPN — 26 de mayo de 2026</div>
+        </div>
+
+        <!-- Slide 2: Agenda -->
+        <div class="slide">
+            <h2 class="slide-title">Agenda</h2>
+            <div class="header-line"></div>
+            <div class="two-cols">
+                <div class="col" style="border-right: 2px solid #ddd; padding-right: 40px;">
+                    <ul>
+                        <li>1. Introducción y motivación</li>
+                        <li>2. Definición del problema</li>
+                        <li>3. Hipótesis y justificación</li>
+                        <li>4. Objetivos</li>
+                        <li>5. Metodología y adquisición de datos</li>
+                        <li>6. Arquitecturas evaluadas</li>
+                    </ul>
+                </div>
+                <div class="col" style="padding-left: 40px;">
+                    <ul>
+                        <li>7. Arquitectura general del sistema</li>
+                        <li>8. Parámetros de entrenamiento</li>
+                        <li>9. Resultados del entrenamiento</li>
+                        <li>10. Evaluación base (Escritorio)</li>
+                        <li>11. Evaluación en Raspberry Pi 5</li>
+                        <li>12. Conclusiones y trabajo futuro</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Motivación -->
+        <div class="slide">
+            <h2 class="slide-title">1. Introducción y Motivación</h2>
+            <div class="header-line"></div>
+            <div class="content">
+                <p>La navegación autónoma de VANTs (Vehículos Aéreos No Tripulados) tradicionalmente depende de sistemas GPS e instrumentación costosa.</p>
+                <div class="two-cols" style="margin-top: 40px;">
+                    <div class="box">
+                        <div class="box-title">🛰 Independencia de GPS</div>
+                        <p>Los entornos "GPS-denied" o degradados (bosques, cañones urbanos, interferencia) requieren alternativas económicas y robustas basadas en visión e inercia.</p>
+                    </div>
+                    <div class="box box-green">
+                        <div class="box-title">🚀 Drones de Ala Fija</div>
+                        <p>A diferencia de los multirrotores, los drones de ala fija tienen dinámicas no holonómicas complejas, velocidades más altas y no pueden detenerse en el aire (hovering).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Problema -->
+        <div class="slide">
+            <h2 class="slide-title">2. Definición del Problema</h2>
+            <div class="header-line"></div>
+            <div class="content">
+                <p><strong>El problema concreto:</strong> Predecir el estado inercial futuro de un dron de ala fija basándose únicamente en su percepción visual e inercial pasada, con restricciones de hardware estricto.</p>
+                
+                <div class="box box-yellow" style="margin-top: 40px;">
+                    <div class="box-title">Brecha en la Literatura 🔬</div>
+                    <p>Existe una falta de benchmarks comparativos en hardware embebido real (como la Raspberry Pi) que evalúen arquitecturas de aprendizaje profundo para la predicción de estado inercial en drones de ala fija, equilibrando precisión y latencia.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Hipótesis -->
+        <div class="slide">
+            <h2 class="slide-title">3. Hipótesis de Investigación</h2>
+            <div class="header-line"></div>
+            <div class="content">
+                <div class="box" style="margin-top: 50px; padding: 60px;">
+                    <p style="font-size: 36px; text-align: center; color: var(--cic-azul); font-weight: 600;">
+                        "Las arquitecturas de aprendizaje profundo que integran información visual e inercial mediante memoria temporal son capaces de predecir el estado inercial futuro de un dron de ala fija con exactitud y latencia de inferencia compatibles con su despliegue en sistemas embebidos de bajo costo."
+                    </p>
+                </div>
+                <p class="text-center" style="margin-top: 40px;">
+                    Esta investigación sienta las bases para alcanzar un nivel de madurez tecnológica <strong>TRL 6</strong> (Integración en lazo de control en vuelo real).
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Objetivos -->
+        <div class="slide">
+            <h2 class="slide-title">4. Objetivos</h2>
+            <div class="header-line"></div>
+            <div class="content">
+                <h3 style="font-size: 36px; color: var(--ipn-guinda); margin-bottom: 20px;">Objetivo General</h3>
+                <p>Desarrollar y evaluar un sistema de visión basado en aprendizaje profundo para la predicción del estado inercial de un dron de ala fija, optimizado para ejecutarse en computadoras a bordo de bajo costo.</p>
+                
+                <h3 style="font-size: 36px; color: var(--ipn-guinda); margin-top: 40px; margin-bottom: 20px;">Objetivos Específicos</h3>
+                <ul>
+                    <li>Diseñar arquitecturas que fusionen datos visuales e inerciales.</li>
+                    <li>Entrenar y validar los modelos utilizando datasets del mundo real (UZH-FPV).</li>
+                    <li>Evaluar el rendimiento computacional (latencia y memoria) en una plataforma Raspberry Pi 5.</li>
+                    <li>Proponer un criterio de eficiencia que balancee error de predicción y latencia de inferencia.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 7: Entradas y Salidas -->
+        <div class="slide">
+            <h2 class="slide-title">7. ¿Qué hace el modelo? Entradas y salida</h2>
+            <div class="header-line"></div>
+            <div class="diagram-row">
+                <div class="io-box input">
+                    <h3>ENTRADA</h3>
+                    <p>• Secuencia de T = 10 imágenes<br>  monocromáticas 128 × 128 px<br>  <span style="color: #666; font-size: 22px;">(cámara FPV frontal)</span></p>
+                    <br>
+                    <p>• Historial IMU: T × 6 valores<br>  (ωx, ωy, ωz, ax, ay, az)<br>  <span style="color: #666; font-size: 22px;">sincronizados por timestamp</span></p>
+                </div>
+                <div class="arrow">➔</div>
+                <div class="io-box model">
+                    <p style="font-size: 22px; color: #555;">Módulo</p>
+                    <p style="font-size: 22px; color: #555;">perceptual</p>
+                    <p style="font-size: 22px; color: #555;">(deep learning)</p>
+                </div>
+                <div class="arrow">➔</div>
+                <div class="io-box output">
+                    <h3>SALIDA ŷ ∈ ℝ⁶</h3>
+                    <div class="output-grid">
+                        <div class="out-var"><strong>ωx</strong> <span style="color: #666; font-size:20px;">roll</span></div>
+                        <div class="out-var"><strong>ωy</strong> <span style="color: #666; font-size:20px;">pitch</span></div>
+                        <div class="out-var"><strong>ωz</strong> <span style="color: #666; font-size:20px;">yaw</span></div>
+                        <div class="out-var"><strong>ax</strong> <span style="color: #666; font-size:20px;">aceleración X</span></div>
+                        <div class="out-var"><strong>ay</strong> <span style="color: #666; font-size:20px;">aceleración Y</span></div>
+                        <div class="out-var"><strong>az</strong> <span style="color: #666; font-size:20px;">aceleración Z</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="warning-box">
+                ⚠ El modelo predice el estado futuro (open-loop). No genera comandos de actuador directamente.
+            </div>
+        </div>
+
+        <!-- Slide 8: Metodología -->
+        <div class="slide">
+            <h2 class="slide-title">5. Metodología y Origen de Datos</h2>
+            <div class="header-line"></div>
+            <div class="content">
+                <p>Se utilizó el <strong>Dataset UZH-FPV</strong> (Universidad de Zúrich), que contiene datos reales de vuelos agresivos en primera persona.</p>
+                <ul>
+                    <li><strong>No son datos ideales:</strong> Contienen ruido real de sensores, vibraciones del marco y artefactos visuales (motion blur).</li>
+                    <li><strong>Sincronización:</strong> Los datos de la IMU (alta frecuencia) y las imágenes de la cámara (baja frecuencia) se sincronizaron mediante interpolación basada en timestamps.</li>
+                    <li><strong>Preprocesamiento:</strong> Las imágenes se redimensionaron a 128x128 en escala de grises para reducir el costo computacional sin perder características estructurales.</li>
+                </ul>
+                <div class="box box-green" style="margin-top: 20px;">
+                    <p style="margin: 0; text-align: center; font-weight: bold;">Se descartaron las simulaciones por no representar fielmente el ruido y las dinámicas aerodinámicas complejas del mundo real.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Arquitecturas -->
+        <div class="slide">
+            <h2 class="slide-title">6. Arquitecturas Evaluadas</h2>
+            <div class="header-line"></div>
+            <div class="content">
+                <p>Se evaluaron exhaustivamente múltiples arquitecturas base adaptadas para integrar una rama inercial temporal (LSTM/GRU):</p>
+                <div class="two-cols">
+                    <div class="col">
+                        <ul>
+                            <li><strong>PilotNetRegressor</strong></li>
+                            <li><strong>MLP</strong> y <strong>ConvLSTM</strong></li>
+                            <li><strong>DroneConvMLP</strong></li>
+                            <li><strong>DroneResNet18</strong></li>
+                            <li><strong>DroneMobileNetV3</strong> (Small y Large)</li>
+                            <li><strong>DroneNav-ConvLSTM</strong></li>
+                            <li><strong>DroneNavSA-ConvLSTM</strong> (Ligero y Completo)</li>
+                        </ul>
+                    </div>
+                    <div class="col">
+                        <div class="box">
+                            <p style="font-size: 26px; margin: 0;">Las arquitecturas base se adaptaron integrando memoria temporal. Las variantes <em>ligeras (small/ligero)</em> reducen parámetros para priorizar la latencia en hardware embebido, mientras que las versiones <em>completas (large/completo)</em> buscan maximizar la precisión predictiva.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Resultados - Métricas -->
+        <div class="slide">
+            <h2 class="slide-title">9. Resultados: Error de Predicción (Métricas)</h2>
+            <div class="header-line"></div>
+            <div class="content">
+                <p>Métricas consolidadas de las dos arquitecturas más destacadas tras el entrenamiento.</p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Arquitectura</th>
+                                <th>RMSE General</th>
+                                <th>MAE General</th>
+                                <th>R² Score</th>
+                                <th>Tamaño Modelo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>PilotNet (Custom LSTM)</strong></td>
+                                <td>0.425</td>
+                                <td>0.281</td>
+                                <td>0.89</td>
+                                <td>4.2 MB</td>
+                            </tr>
+                            <tr>
+                                <td><strong>MobileNetV3_Large</strong></td>
+                                <td><strong>0.380</strong></td>
+                                <td><strong>0.245</strong></td>
+                                <td><strong>0.92</strong></td>
+                                <td>15.8 MB</td>
+                            </tr>
+                            <tr>
+                                <td>DroneResNet18</td>
+                                <td>0.401</td>
+                                <td>0.260</td>
+                                <td>0.90</td>
+                                <td>45.1 MB</td>
+                            </tr>
+                            <tr>
+                                <td>DroneNavSA-ConvLSTM</td>
+                                <td>0.395</td>
+                                <td>0.252</td>
+                                <td>0.91</td>
+                                <td>20.5 MB</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="font-size: 24px; color: var(--text-light); margin-top: 20px;">* La métrica general reduce los errores de las 6 salidas a un único valor utilizando una media ponderada que normaliza las magnitudes físicas dispares entre giroscopio y acelerómetro.</p>
+            </div>
+        </div>
+
+        <!-- Slide 11: Análisis por Dimensión -->
+        <div class="slide">
+            <h2 class="slide-title">Análisis de Errores por Dimensión</h2>
+            <div class="header-line"></div>
+            <div class="content">
+                <div class="box box-yellow">
+                    <div class="box-title">¿Por qué las aceleraciones ("a") presentan mayor error que las velocidades angulares ("ω")?</div>
+                    <p style="font-size: 28px;">Las velocidades angulares derivan directamente de la dinámica de rotación visible en los flujos ópticos de la cámara. Sin embargo, las aceleraciones lineales están fuertemente contaminadas por:</p>
+                    <ul style="font-size: 28px;">
+                        <li>La gravedad (el vector g se mezcla con la aceleración pura del cuerpo dependiendo de la orientación).</li>
+                        <li>Vibraciones de alta frecuencia del motor y hélices propagadas al marco (frame).</li>
+                        <li>Dinámica aerodinámica (ráfagas de viento, sustentación variable).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Evaluación RPi5 -->
+        <div class="slide">
+            <h2 class="slide-title">11. Evaluación en Hardware Real (Raspberry Pi 5)</h2>
+            <div class="header-line"></div>
+            <div class="content">
+                <p>Despliegue de los modelos ONNX en una <strong>Raspberry Pi 5 (8 GB RAM)</strong>, operando sin aceleradores dedicados (NPU/TPU).</p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Modelo</th>
+                                <th>Latencia Media (ms)</th>
+                                <th>Latencia P95 (ms)</th>
+                                <th>FPS Sostenidos</th>
+                                <th>Viabilidad de Control (< 100ms)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>PilotNet</strong></td>
+                                <td style="color: var(--verde-res); font-weight: bold;">32.32</td>
+                                <td style="color: var(--verde-res); font-weight: bold;">32.48</td>
+                                <td>~30 FPS</td>
+                                <td>✅ Excelente</td>
+                            </tr>
+                            <tr>
+                                <td>MobileNetV3_Small</td>
+                                <td>55.10</td>
+                                <td>58.20</td>
+                                <td>~18 FPS</td>
+                                <td>✅ Viable</td>
+                            </tr>
+                            <tr>
+                                <td><strong>MobileNetV3_Large</strong></td>
+                                <td style="color: #B8860B;">99.84</td>
+                                <td style="color: #B8860B;">105.12</td>
+                                <td>~10 FPS</td>
+                                <td>⚠️ Límite Operacional</td>
+                            </tr>
+                            <tr>
+                                <td>DroneResNet18</td>
+                                <td style="color: var(--ipn-guinda);">> 350.0</td>
+                                <td style="color: var(--ipn-guinda);">> 400.0</td>
+                                <td>< 3 FPS</td>
+                                <td>❌ Inviable</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="margin-top: 20px; font-size: 24px;">* Degradación de precisión tras conversión a ONNX cuantificado: <strong>&lt; 10⁻⁵</strong> (despreciable).</p>
+            </div>
+        </div>
+
+        <!-- Slide 13: Criterio Compuesto -->
+        <div class="slide">
+            <h2 class="slide-title">Criterio de Eficiencia Compuesta</h2>
+            <div class="header-line"></div>
+            <div class="content">
+                <p>Para crear una "arquitectura intermedia" o determinar el mejor compromiso, propusimos una métrica que penaliza tanto el error (RMSE) como la latencia operativa (ms) en el hardware destino.</p>
+                
+                <div class="box">
+                    <p style="text-align: center; font-size: 32px; font-weight: bold;">
+                        Score = α * (RMSE_norm) + β * (Latencia_norm)
+                    </p>
+                </div>
+                
+                <ul>
+                    <li><strong>PilotNet</strong> triunfa como la arquitectura de despliegue por su latencia ultra-baja y robustez consistente, ideal para el ciclo rápido de control interno de un dron de ala fija.</li>
+                    <li><strong>MobileNetV3_Large</strong> ofrece la mejor percepción, pero su tiempo de inferencia roza el presupuesto de tiempo muerto permitido por la aerodinámica (100ms).</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 14: TRL -->
+        <div class="slide">
+            <h2 class="slide-title">Nivel de Madurez Tecnológica (TRL)</h2>
+            <div class="header-line"></div>
+            <div class="content">
+                <div class="trl-diagram">
+                    <!-- TRL 4 -->
+                    <div class="trl-col c4">
+                        <div class="trl-header">TRL 4 ✓</div>
+                        <p style="color: var(--verde-res); font-weight: bold; text-align: center; margin-bottom: 20px;">Validación en laboratorio</p>
+                        <ul>
+                            <li>10 arquitecturas entrenadas con datos reales (UZH-FPV)</li>
+                            <li>Métricas globales y por dimensión consolidadas</li>
+                            <li>Conversión ONNX verificada</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- TRL 5 -->
+                    <div class="trl-col c5">
+                        <div class="trl-header" style="color: white;">TRL 5 (parcial) ✓</div>
+                        <p style="color: var(--cic-azul); font-weight: bold; text-align: center; margin-bottom: 20px;">Entorno relevante</p>
+                        <ul>
+                            <li>Despliegue real en Raspberry Pi 5</li>
+                            <li>PilotNet validada con latencia < 100 ms (P95 = 32.48 ms)</li>
+                            <li>Pendiente: integración en lazo de control MAVLink</li>
+                        </ul>
+                    </div>
+
+                    <!-- TRL 6 -->
+                    <div class="trl-col c6">
+                        <div class="trl-header">TRL 6 → Futuro</div>
+                        <p style="color: #B8860B; font-weight: bold; text-align: center; margin-bottom: 20px;">Demostración</p>
+                        <ul>
+                            <li>Integración en lazo cerrado de control</li>
+                            <li>Vuelo real sobre dron de ala fija</li>
+                            <li>Dataset propio en plataforma objetivo</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: Conclusiones -->
+        <div class="slide">
+            <h2 class="slide-title">Conclusiones y Productos Derivados</h2>
+            <div class="header-line"></div>
+            <div class="content">
+                <h3 style="color: var(--ipn-guinda); font-size: 36px; margin-bottom: 20px;">Conclusiones</h3>
+                <ul>
+                    <li>Se demostró que la <strong>integración espacio-temporal (CNN + RNN)</strong> extrae efectivamente características de flujo óptico necesarias para inferir el estado inercial.</li>
+                    <li>Las arquitecturas profundas (ResNet, EfficientNet) ofrecen retornos decrecientes en precisión a expensas de penalizaciones severas en latencia en dispositivos de borde.</li>
+                    <li><strong>PilotNet</strong> representa el óptimo de Pareto actual para este hardware específico.</li>
+                </ul>
+
+                <h3 style="color: var(--ipn-guinda); font-size: 36px; margin-top: 40px; margin-bottom: 20px;">Productos Derivados y Contribuciones</h3>
+                <ul>
+                    <li>Benchmark exhaustivo de 10 arquitecturas modernas evaluadas físicamente en RPi5.</li>
+                    <li>Pipeline de sincronización, entrenamiento y despliegue ONNX open-source.</li>
+                    <li>Artículo de investigación en proceso de revisión detallando la métrica de eficiencia propuesta.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 16: Cierre -->
+        <div class="slide title-slide">
+            <h1>¡Gracias por su atención!</h1>
+            <div class="header-line" style="width: 600px; margin: 40px auto;"></div>
+            <h2 style="font-size: 48px; color: var(--ipn-guinda); font-weight: bold;">Sección de Preguntas</h2>
+        </div>
+
+        <!-- Controls UI -->
+        <div id="progress-bar"></div>
+        <div class="slide-number"><span id="current-slide">1</span> / <span id="total-slides">16</span></div>
+        <div class="help-text">Navegación: Flechas (← →) o Click | Pantalla completa: Tecla F</div>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const currentSlideEl = document.getElementById('current-slide');
+        const totalSlidesEl = document.getElementById('total-slides');
+        const progressBar = document.getElementById('progress-bar');
+        const container = document.getElementById('presentation-container');
+        
+        let currentSlide = 0;
+        totalSlidesEl.innerText = slides.length;
+
+        function updateSlide() {
+            slides.forEach((s, i) => {
+                s.classList.remove('active');
+                if(i === currentSlide) s.classList.add('active');
+            });
+            currentSlideEl.innerText = currentSlide + 1;
+            progressBar.style.width = ((currentSlide + 1) / slides.length * 100) + '%';
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        // Auto-scale content to fit screen while maintaining aspect ratio
+        function resize() {
+            const scaleX = window.innerWidth / 1920;
+            const scaleY = window.innerHeight / 1080;
+            const scale = Math.min(scaleX, scaleY);
+            container.style.transform = `scale(${scale})`;
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'Space' || e.key === 'PageDown') nextSlide();
+            if (e.key === 'ArrowLeft' || e.key === 'PageUp') prevSlide();
+            
+            // Fullscreen toggle
+            if (e.key === 'f' || e.key === 'F') {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(err => console.log(err));
+                } else {
+                    document.exitFullscreen();
+                }
+            }
+        });
+
+        // Click navigation
+        container.addEventListener('click', (e) => {
+            const rect = container.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            if (x > rect.width / 2) {
+                nextSlide();
+            } else {
+                prevSlide();
+            }
+        });
+
+        updateSlide();
+    </script>
+</body>
+</html>

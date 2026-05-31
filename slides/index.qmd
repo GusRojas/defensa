@@ -1,0 +1,288 @@
+---
+title: "Sistema de visión para navegación autónoma de dron de ala fija"
+subtitle: "Maestría en Ciencias en Ingeniería de Cómputo — CIC-IPN"
+author: "Ing. Gustavo Mandujano Rojas"
+date: "2026-06-16"
+date-format: "D [de] MMMM [de] YYYY"
+lang: es
+format:
+  revealjs:
+    theme: [simple, custom.scss]
+    slide-number: true
+    progress: true
+    transition: fade
+    width: 1280
+    height: 720
+    incremental: false
+    center-title-slide: true
+---
+
+##  {.center}
+
+::: {style="text-align:center;"}
+**Presenta:** Ing. Gustavo Mandujano Rojas
+
+**Directores:** Dr. Juan Humberto Sossa Azuela · Dr. Erik Zamora Gómez
+:::
+
+::: {style="text-align:center; color:#555; margin-top:1.5em;"}
+Maestría en Ciencias en Ingeniería de Cómputo — CIC-IPN — 16 de junio de 2026
+:::
+
+## Agenda
+
+::: columns
+::: {.column width="50%"}
+1. Introducción y motivación
+2. Definición del problema
+3. Hipótesis y justificación
+4. Objetivos general y específicos
+5. Metodología y adquisición de datos
+6. Arquitecturas evaluadas
+:::
+
+::: {.column width="50%"}
+7. Arquitectura general del sistema
+8. Resultados del entrenamiento
+9. Evaluación en Raspberry Pi 5
+10. Criterio de eficiencia compuesta
+11. Nivel de madurez tecnológica (TRL)
+12. Conclusiones y trabajo futuro
+:::
+:::
+
+## 1. Introducción y motivación
+
+La navegación autónoma de VANTs (Vehículos Aéreos No Tripulados) tradicionalmente depende de sistemas GPS e instrumentación costosa.
+
+::: columns
+::: {.column width="50%"}
+::: {.callout-note icon="false"}
+### 🛰 Independencia de GPS
+Los entornos *GPS-denied* o degradados (bosques, cañones urbanos, interferencia) requieren alternativas económicas y robustas basadas en visión e inercia.
+:::
+:::
+
+::: {.column width="50%"}
+::: {.callout-tip icon="false"}
+### 🚀 Drones de ala fija
+A diferencia de los multirrotores, tienen dinámicas no holonómicas complejas, velocidades más altas y no pueden detenerse en el aire (*hovering*).
+:::
+:::
+:::
+
+## 2. Definición del problema
+
+**El problema concreto:** predecir el estado inercial *futuro* de un dron de ala fija basándose únicamente en su percepción visual e inercial pasada, con restricciones de hardware estricto.
+
+::: {.callout-warning icon="false"}
+### 🔬 Brecha en la literatura
+Existe una falta de *benchmarks* comparativos en hardware embebido real (como la Raspberry Pi) que evalúen arquitecturas de aprendizaje profundo para la predicción de estado inercial en drones de ala fija, equilibrando precisión y latencia.
+:::
+
+## 3. Hipótesis y justificación
+
+> Las arquitecturas de aprendizaje profundo que integran información visual e inercial mediante memoria temporal son capaces de predecir el estado inercial futuro de un dron de ala fija con exactitud y latencia de inferencia compatibles con su despliegue en sistemas embebidos de bajo costo.
+
+::: {.fragment style="text-align:center; margin-top:1em;"}
+Esta investigación sienta las bases para alcanzar un nivel de madurez tecnológica **TRL 6** (integración en lazo de control en vuelo real).
+:::
+
+## 4. Objetivo general
+
+
+Desarrollar y evaluar un sistema de visión basado en aprendizaje profundo para la predicción del estado inercial de un dron de ala fija, optimizado para ejecutarse en computadoras a bordo de bajo costo.
+
+## 4b. Objetivos específicos
+
+- Diseñar arquitecturas que fusionen datos visuales e inerciales.
+- Entrenar y validar los modelos con datasets del mundo real (**UZH-FPV**).
+- Evaluar el rendimiento computacional (latencia y memoria) en una **Raspberry Pi 5**.
+- Proponer un criterio de eficiencia que balancee error de predicción y latencia de inferencia.
+
+## 5. Metodología y adquisición de datos
+
+Se utilizó el **Dataset UZH-FPV** (Universidad de Zúrich), con datos reales de vuelos agresivos en primera persona.
+
+- **No son datos ideales:** contienen ruido real de sensores, vibraciones del marco y artefactos visuales (*motion blur*).
+- **Sincronización:** la IMU (alta frecuencia) y las imágenes de la cámara (baja frecuencia) se sincronizaron mediante interpolación basada en *timestamps*.
+- **Preprocesamiento:** imágenes redimensionadas a 128×128 en escala de grises para reducir el costo computacional sin perder características estructurales.
+
+::: {.callout-tip icon="false"}
+Se descartaron las simulaciones por no representar fielmente el ruido y las dinámicas aerodinámicas complejas del mundo real.
+:::
+
+## 6. Arquitecturas evaluadas
+
+Se evaluaron múltiples arquitecturas base adaptadas para integrar una rama inercial temporal (LSTM/GRU):
+
+::: columns
+::: {.column width="50%"}
+- **PilotNetRegressor**
+- **MLP** y **ConvLSTM**
+- **DroneConvMLP**
+- **DroneResNet18**
+- **DroneMobileNetV3** (Small y Large)
+- **DroneNav-ConvLSTM**
+
+:::
+
+::: {.column width="50%"}
+- **DroneNavSA-ConvLSTM** (Ligero y Completo)
+
+::: {.callout-note icon="false"}
+Las arquitecturas base se adaptaron integrando memoria temporal. Las variantes *ligeras* (small/ligero) reducen parámetros para priorizar la latencia en hardware embebido, mientras que las versiones *completas* (large/completo) buscan maximizar la precisión predictiva.
+:::
+:::
+:::
+
+## 7. Arquitectura general: ¿qué hace el modelo? {.slide-densa}
+
+::: columns
+::: {.column width="40%"}
+::: {.box-card .card-azul}
+[ENTRADA]{.box-head}
+
+- Secuencia de **T = 10** imágenes monocromáticas 128×128 px *(cámara FPV frontal)*
+- Historial IMU: **T × 6** valores (ωx, ωy, ωz, ax, ay, az) sincronizados por *timestamp*
+:::
+:::
+
+::: {.column width="20%"}
+::: {.box-card .card-model}
+Módulo perceptual *(deep learning)*
+
+➔
+:::
+:::
+
+::: {.column width="40%"}
+::: {.box-card .card-verde}
+[SALIDA ŷ ∈ ℝ⁶]{.box-head}
+
+ωx *(roll)* · ωy *(pitch)* · ωz *(yaw)*
+
+ax · ay · az *(aceleraciones)*
+:::
+:::
+:::
+
+::: {.callout-important icon="false"}
+⚠ El modelo predice el estado futuro (*open-loop*). No genera comandos de actuador directamente.
+:::
+
+## 8. Resultados: error de predicción {.slide-densa}
+
+Métricas consolidadas de las arquitecturas más destacadas tras el entrenamiento.
+
+| Arquitectura | RMSE General | MAE General | R² Score | Tamaño |
+|---|:--:|:--:|:--:|:--:|
+| PilotNet (Custom LSTM) | 0.425 | 0.281 | 0.89 | 4.2 MB |
+| **MobileNetV3_Large** | **0.380** | **0.245** | **0.92** | 15.8 MB |
+| DroneResNet18 | 0.401 | 0.260 | 0.90 | 45.1 MB |
+| DroneNavSA-ConvLSTM | 0.395 | 0.252 | 0.91 | 20.5 MB |
+
+::: {style="font-size:0.6em; color:#555;"}
+\* La métrica general reduce los errores de las 6 salidas a un único valor mediante una media ponderada que normaliza las magnitudes físicas dispares entre giroscopio y acelerómetro.
+:::
+
+## 8b. Análisis de errores por dimensión
+
+::: {.callout-warning icon="false"}
+### ¿Por qué las aceleraciones (a) presentan mayor error que las velocidades angulares (ω)?
+
+Las velocidades angulares derivan directamente de la dinámica de rotación visible en los flujos ópticos de la cámara. En cambio, las aceleraciones lineales están fuertemente contaminadas por:
+
+- La **gravedad** (el vector g se mezcla con la aceleración pura del cuerpo según la orientación).
+- **Vibraciones** de alta frecuencia de motor y hélices propagadas al marco (*frame*).
+- **Dinámica aerodinámica** (ráfagas de viento, sustentación variable).
+:::
+
+## 9. Evaluación en Raspberry Pi 5 {.slide-densa}
+
+Despliegue de los modelos ONNX en una **Raspberry Pi 5 (8 GB RAM)**, operando sin aceleradores dedicados (NPU/TPU).
+
+| Modelo | Lat. Media (ms) | Lat. P95 (ms) | FPS | Viabilidad (< 100 ms) |
+|---|:--:|:--:|:--:|:--|
+| **PilotNet** | [32.32]{.text-verde} | [32.48]{.text-verde} | ~30 | ✅ Excelente |
+| MobileNetV3_Small | 55.10 | 58.20 | ~18 | ✅ Viable |
+| **MobileNetV3_Large** | [99.84]{.text-ambar} | [105.12]{.text-ambar} | ~10 | ⚠️ Límite operacional |
+| DroneResNet18 | [> 350.0]{.text-guinda} | [> 400.0]{.text-guinda} | < 3 | ❌ Inviable |
+
+::: {style="font-size:0.6em;"}
+\* Degradación de precisión tras conversión a ONNX cuantificado: **< 10⁻⁵** (despreciable).
+:::
+
+## 10. Criterio de eficiencia compuesta {.slide-densa}
+
+Para determinar el mejor compromiso, propusimos una métrica que penaliza tanto el error (RMSE) como la latencia operativa (ms) en el hardware destino.
+
+::: {.formula-box}
+Score = α · (RMSE~norm~) + β · (Latencia~norm~)
+:::
+
+- **PilotNet** triunfa como arquitectura de despliegue por su latencia ultra-baja y robustez consistente, ideal para el ciclo rápido de control interno de un dron de ala fija.
+- **MobileNetV3_Large** ofrece la mejor percepción, pero su tiempo de inferencia roza el presupuesto de tiempo muerto permitido por la aerodinámica (100 ms).
+
+## 11. Nivel de madurez tecnológica (TRL) {.slide-densa}
+
+::: columns
+::: {.column width="33%"}
+::: {.box-card .card-verde}
+::: {.trl-header .h4}
+TRL 4 ✓
+:::
+**Validación en laboratorio**
+
+- 10 arquitecturas entrenadas con datos reales (UZH-FPV)
+- Métricas globales y por dimensión consolidadas
+- Conversión ONNX verificada
+:::
+:::
+
+::: {.column width="33%"}
+::: {.box-card .card-azul}
+::: {.trl-header .h5}
+TRL 5 (parcial) ✓
+:::
+**Entorno relevante**
+
+- Despliegue real en Raspberry Pi 5
+- PilotNet validada con latencia < 100 ms (P95 = 32.48 ms)
+- Pendiente: integración en lazo MAVLink
+:::
+:::
+
+::: {.column width="33%"}
+::: {.box-card .card-ambar}
+::: {.trl-header .h6}
+TRL 6 → Futuro
+:::
+**Demostración**
+
+- Integración en lazo cerrado de control
+- Vuelo real sobre dron de ala fija
+- Dataset propio en plataforma objetivo
+:::
+:::
+:::
+
+## 12. Conclusiones y trabajo futuro
+
+### Conclusiones {.text-guinda}
+
+- La **integración espacio-temporal (CNN + RNN)** extrae efectivamente características de flujo óptico necesarias para inferir el estado inercial.
+- Las arquitecturas profundas (ResNet, EfficientNet) ofrecen retornos decrecientes en precisión a expensas de penalizaciones severas en latencia en dispositivos de borde.
+- **PilotNet** representa el óptimo de Pareto actual para este hardware específico.
+
+### Productos derivados y contribuciones {.text-guinda}
+
+- *Benchmark* exhaustivo de 10 arquitecturas modernas evaluadas físicamente en RPi5.
+- *Pipeline* de sincronización, entrenamiento y despliegue ONNX *open-source*.
+- Artículo de investigación en revisión detallando la métrica de eficiencia propuesta.
+
+## ¡Gracias por su atención! {.center}
+
+::: {style="text-align:center;"}
+[Sección de preguntas]{.box-head .text-guinda style="font-size:1.6em;"}
+:::
