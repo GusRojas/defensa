@@ -65,7 +65,7 @@ Los entornos *GPS-denied* o degradados (bosques, cañones urbanos, interferencia
 
 ::: {.column width="50%"}
 ::: {.callout-tip icon="false"}
-### 🚀 Drones de ala fija
+### 🛩️ Drones de ala fija
 A diferencia de los multirrotores, tienen dinámicas no holonómicas complejas, velocidades más altas y no pueden detenerse en el aire (*hovering*).
 :::
 :::
@@ -76,8 +76,8 @@ A diferencia de los multirrotores, tienen dinámicas no holonómicas complejas, 
 **El problema concreto:** predecir el estado inercial *futuro* de un dron de ala fija basándose únicamente en su percepción visual e inercial pasada, con restricciones de hardware estricto.
 
 ::: {.callout-warning icon="false"}
-### 🔬 Brecha en la literatura
-Existe una falta de *benchmarks* comparativos en hardware embebido real (como la Raspberry Pi) que evalúen arquitecturas de aprendizaje profundo para la predicción de estado inercial en drones de ala fija, equilibrando precisión y latencia.
+### 📖 Brecha en la literatura
+Existe una falta de bancos de pruebas comparativos en hardware embebido real (como la Raspberry Pi 5) que evalúen arquitecturas de aprendizaje profundo para la predicción de estado inercial en drones de ala fija, equilibrando precisión y latencia.
 :::
 
 ## 3. Hipótesis y justificación
@@ -85,20 +85,22 @@ Existe una falta de *benchmarks* comparativos en hardware embebido real (como la
 > Las arquitecturas de aprendizaje profundo que integran información visual e inercial mediante memoria temporal son capaces de predecir el estado inercial futuro de un dron de ala fija con exactitud y latencia de inferencia compatibles con su despliegue en sistemas embebidos de bajo costo.
 
 ::: {.fragment style="text-align:center; margin-top:1em;"}
-Esta investigación sienta las bases para alcanzar un nivel de madurez tecnológica **TRL 6** (integración en lazo de control en vuelo real).
+La necesidad de una navegación autónoma segura en drones de ala fija se propone el uso de aprendizaje profundo y redes recurrentes para la detección y evasión de obstáculos.
 :::
 
 ## 4. Objetivo general
 
+Evaluar comparativamente arquitecturas de aprendizaje profundo para la predicción del
+estado inercial futuro de un dron de ala fija a partir de secuencias visuales e inerciales
+sincronizadas, con restricciones de latencia y eficiencia computacional compatibles con su
+despliegue en sistemas embebidos de bajo costo. 
 
-Desarrollar y evaluar un sistema de visión basado en aprendizaje profundo para la predicción del estado inercial de un dron de ala fija, optimizado para ejecutarse en computadoras a bordo de bajo costo.
+## 4b. Objetivos específicos {.slide-densa}
 
-## 4b. Objetivos específicos
-
-- Diseñar arquitecturas que fusionen datos visuales e inerciales.
-- Entrenar y validar los modelos con datasets del mundo real (**UZH-FPV**).
-- Evaluar el rendimiento computacional (latencia y memoria) en una **Raspberry Pi 5**.
-- Proponer un criterio de eficiencia que balancee error de predicción y latencia de inferencia.
+1. Entrenar arquitecturas DL: Implementar modelos CNN, RNN, de auto-atención e híbridos utilizando datos sincronizados de imagen e IMU (dataset UZH-FPV).
+2. Evaluar desempeño predictivo: Analizar la precisión mediante métricas de regresión (RMSE, MAE, $R^2$) a nivel global y por dimensión cinemática (rotación/traslación).
+3. Desplegar en hardware embebido: Exportar los modelos en ONNX a una Raspberry Pi 5 para evaluar su latencia, tamaño y estabilidad frente al presupuesto temporal de vuelo.
+4. Definir criterio de selección: Proponer un índice de eficiencia global (precisión-latencia-tamaño) para determinar la arquitectura óptima para el módulo perceptual del dron.
 
 ## 5. Metodología y adquisición de datos
 
