@@ -563,7 +563,7 @@ Score = α · (RMSE~norm~) + β · (Latencia~norm~)
 ::: {.column width="33%"}
 ::: {.box-card .card-verde}
 ::: {.trl-header .h4}
-TRL 4 ✓
+TRL 4 (parcial) ✓
 :::
 **Validación en laboratorio**
 

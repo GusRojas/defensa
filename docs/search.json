@@ -109,7 +109,7 @@
     "href": "index.html#nivel-de-madurez-tecnológica-trl",
     "title": "Sistema de visión para navegación autónoma de dron de ala fija",
     "section": "12. Nivel de madurez tecnológica (TRL)",
-    "text": "12. Nivel de madurez tecnológica (TRL)\n\n\n\n\nTRL 4 ✓\n\nValidación en laboratorio\n\n10 arquitecturas entrenadas con datos reales (UZH-FPV)\nMétricas globales y por dimensión consolidadas\nConversión ONNX verificada\n\n\n\n\n\nTRL 5 (parcial) ✓\n\nEntorno relevante\n\nDespliegue real en Raspberry Pi 5\nPilotNet validada con latencia &lt; 100 ms (P95 = 32.48 ms)\nPendiente: integración en lazo MAVLink\n\n\n\n\n\nTRL 6 → Futuro\n\nDemostración\n\nIntegración en lazo cerrado de control\nVuelo real sobre dron de ala fija\nDataset propio en plataforma objetivo"
+    "text": "12. Nivel de madurez tecnológica (TRL)\n\n\n\n\nTRL 4 (parcial) ✓\n\nValidación en laboratorio\n\n10 arquitecturas entrenadas con datos reales (UZH-FPV)\nMétricas globales y por dimensión consolidadas\nConversión ONNX verificada\n\n\n\n\n\nTRL 5 (parcial) ✓\n\nEntorno relevante\n\nDespliegue real en Raspberry Pi 5\nPilotNet validada con latencia &lt; 100 ms (P95 = 32.48 ms)\nPendiente: integración en lazo MAVLink\n\n\n\n\n\nTRL 6 → Futuro\n\nDemostración\n\nIntegración en lazo cerrado de control\nVuelo real sobre dron de ala fija\nDataset propio en plataforma objetivo"
   },
   {
     "objectID": "index.html#conclusiones-y-trabajo-futuro",
