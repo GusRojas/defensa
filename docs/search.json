@@ -1,0 +1,142 @@
+[
+  {
+    "objectID": "index.html#section",
+    "href": "index.html#section",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "",
+    "text": "Presenta: Ing. Gustavo Mandujano Rojas\nDirectores: Dr. Juan Humberto Sossa Azuela · Dr. Erik Zamora Gómez\n\n\nMaestría en Ciencias en Ingeniería de Cómputo — CIC-IPN — 16 de junio de 2026"
+  },
+  {
+    "objectID": "index.html#agenda",
+    "href": "index.html#agenda",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "Agenda",
+    "text": "Agenda\n\n\n\nIntroducción y motivación\nDefinición del problema\nHipótesis y justificación\nObjetivos general y específicos\nMetodología y adquisición de datos\nArquitecturas evaluadas\nModelo E2E\n\n\n\nFlujo de datos\nResultados del entrenamiento\nEvaluación en Raspberry Pi 5\nCriterio de eficiencia compuesta\nNivel de madurez tecnológica (TRL)\nConclusiones y trabajo futuro"
+  },
+  {
+    "objectID": "index.html#introducción-y-motivación",
+    "href": "index.html#introducción-y-motivación",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "1. Introducción y motivación",
+    "text": "1. Introducción y motivación\nLa navegación autónoma de VANTs (Vehículos Aéreos No Tripulados) tradicionalmente depende de sistemas GPS e instrumentación costosa.\n\n\n\n\n\n🛰 Independencia de GPS\n\n\nLos entornos GPS-denied o degradados (bosques, cañones urbanos, interferencia) requieren alternativas económicas y robustas basadas en visión e inercia.\n\n\n\n\n\n\n\n🛩️ Drones de ala fija\n\n\nA diferencia de los multirrotores, vuelan a velocidades más altas y no pueden detenerse en el aire (hovering)."
+  },
+  {
+    "objectID": "index.html#definición-del-problema",
+    "href": "index.html#definición-del-problema",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "2. Definición del problema",
+    "text": "2. Definición del problema\nEl problema concreto: predecir el estado inercial futuro de un dron de ala fija basándose únicamente en su percepción visual e inercial pasada, con restricciones de hardware estricto.\n\n\n\n📖 Brecha en la literatura\n\n\nExiste una falta de bancos de pruebas comparativos en hardware embebido real (como la Raspberry Pi 5) que evalúen arquitecturas de aprendizaje profundo para la predicción de estado inercial en drones de ala fija, equilibrando precisión y latencia."
+  },
+  {
+    "objectID": "index.html#hipótesis-y-justificación",
+    "href": "index.html#hipótesis-y-justificación",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "3. Hipótesis y justificación",
+    "text": "3. Hipótesis y justificación\n\nLas arquitecturas de aprendizaje profundo que integran información visual e inercial mediante memoria temporal son capaces de predecir el estado inercial futuro de un dron de ala fija con exactitud y latencia de inferencia compatibles con su despliegue en sistemas embebidos de bajo costo.\n\n\nLa necesidad de una navegación autónoma segura en drones de ala fija se propone el uso de aprendizaje profundo y redes recurrentes para la detección y evasión de obstáculos."
+  },
+  {
+    "objectID": "index.html#objetivo-general",
+    "href": "index.html#objetivo-general",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "4. Objetivo general",
+    "text": "4. Objetivo general\nEvaluar comparativamente arquitecturas de aprendizaje profundo para la predicción del estado inercial futuro de un dron de ala fija a partir de secuencias visuales e inerciales sincronizadas, con restricciones de latencia y eficiencia computacional compatibles con su despliegue en sistemas embebidos de bajo costo."
+  },
+  {
+    "objectID": "index.html#b.-objetivos-específicos",
+    "href": "index.html#b.-objetivos-específicos",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "4b. Objetivos específicos",
+    "text": "4b. Objetivos específicos\n\nEntrenar arquitecturas DL: Implementar modelos CNN, RNN, de auto-atención e híbridos utilizando datos sincronizados de imagen e IMU (dataset UZH-FPV).\nEvaluar desempeño predictivo: Analizar la precisión mediante métricas de regresión (RMSE, MAE, \\(R^2\\)) a nivel global y por dimensión cinemática (rotación/traslación).\nDesplegar en hardware embebido: Exportar los modelos en ONNX a una Raspberry Pi 5 para evaluar su latencia, tamaño y estabilidad frente al presupuesto temporal de vuelo.\nDefinir criterio de selección: Proponer un índice de eficiencia global (precisión-latencia-tamaño) para determinar la arquitectura óptima para el módulo perceptual del dron."
+  },
+  {
+    "objectID": "index.html#metodología-y-adquisición-de-datos",
+    "href": "index.html#metodología-y-adquisición-de-datos",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "5. Metodología y adquisición de datos",
+    "text": "5. Metodología y adquisición de datos\nSe utilizó el Dataset UZH-FPV (Universidad de Zúrich), con datos reales de vuelos agresivos en primera persona.\n\nNo son datos ideales: contienen ruido real de sensores, vibraciones del marco.\nSincronización: la IMU (alta frecuencia) y las imágenes de la cámara (baja frecuencia) se sincronizaron mediante interpolación basada en timestamps.\nPreprocesamiento: imágenes redimensionadas a 128×128 en escala de grises para reducir el costo computacional sin perder características estructurales.\n\n\n\n\nTip\n\n\nSe descartaron las simulaciones por no representar fielmente el ruido y las dinámicas aerodinámicas complejas del mundo real."
+  },
+  {
+    "objectID": "index.html#arquitecturas-evaluadas",
+    "href": "index.html#arquitecturas-evaluadas",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "6. Arquitecturas evaluadas",
+    "text": "6. Arquitecturas evaluadas\nSe evaluaron múltiples arquitecturas base adaptadas para integrar una rama inercial temporal :\n\n\n\nPilotNetRegressor\nMLP y ConvMLP\nConvLSTM\nDroneResNet18\nDroneMobileNetV3 (Small y Large)\nDroneNav-ConvLSTM\n\n\n\nDroneNavSA-ConvLSTM (Ligero y Completo)\n\n\n\n\nNota\n\n\nLas arquitecturas base se adaptaron integrando memoria temporal. Las variantes ligeras (small/ligero) reducen parámetros para priorizar la latencia en hardware embebido, mientras que las versiones completas (large/completo) buscan maximizar la precisión predictiva."
+  },
+  {
+    "objectID": "index.html#modelo-e2e-qué-hace-el-modelo",
+    "href": "index.html#modelo-e2e-qué-hace-el-modelo",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "7. Modelo E2E: ¿qué hace el modelo?",
+    "text": "7. Modelo E2E: ¿qué hace el modelo?\n\n\n\nENTRADA\n\nSecuencia de T = 10 imágenes monocromáticas 128×128 px (cámara FPV frontal)\nHistorial IMU: T × 6 valores (ωx, ωy, ωz, ax, ay, az) sincronizados por timestamp\n\n\n\n\nMódulo perceptual (deep learning)\n➔\n\n\n\nSALIDA ŷ ∈ ℝ⁶\nωx (roll) · ωy (pitch) · ωz (yaw)\nax · ay · az (aceleraciones)\n\n\n\n\n\nImportante\n\n\n⚠ El modelo predice el estado futuro (open-loop). No genera comandos de actuador directamente."
+  },
+  {
+    "objectID": "index.html#flujo-de-datos-controlador-de-vuelo-y-computadora-de-acompañamiento",
+    "href": "index.html#flujo-de-datos-controlador-de-vuelo-y-computadora-de-acompañamiento",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "8. Flujo de Datos: Controlador de Vuelo y Computadora de Acompañamiento",
+    "text": "8. Flujo de Datos: Controlador de Vuelo y Computadora de Acompañamiento"
+  },
+  {
+    "objectID": "index.html#resultados-error-de-predicción",
+    "href": "index.html#resultados-error-de-predicción",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "9. Resultados: error de predicción",
+    "text": "9. Resultados: error de predicción\nMétricas consolidadas de las arquitecturas más destacadas tras el entrenamiento.\n\n\n\n\n\n\n\n\n\n\nArquitectura\nRMSE General\nMAE General\nR² Score\nTamaño\n\n\n\n\nPilotNetRegressor\n0.3754\n0.2216\n0.8507\n53.36 MB\n\n\nDroneMobileNetV3_Large\n0.3717\n0.2144\n0.8534\n19.68 MB\n\n\nDroneResNet18\n0.3815\n0.2151\n0.8459\n49.21 MB\n\n\nDroneNavSA-ConvLSTM_ligero\n0.3748\n0.2300\n0.8514\n6.88 MB\n\n\nDroneNavSA-ConvLSTM_completo\n0.3774\n0.2338\n0.8498\n6.77 MB\n\n\n\n\n* La métrica general reduce los errores de las 6 salidas a un único valor mediante una media ponderada que normaliza las magnitudes físicas dispares entre giroscopio y acelerómetro."
+  },
+  {
+    "objectID": "index.html#b.-análisis-de-errores-por-dimensión",
+    "href": "index.html#b.-análisis-de-errores-por-dimensión",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "9b. Análisis de errores por dimensión",
+    "text": "9b. Análisis de errores por dimensión"
+  },
+  {
+    "objectID": "index.html#evaluación-en-raspberry-pi-5",
+    "href": "index.html#evaluación-en-raspberry-pi-5",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "10. Evaluación en Raspberry Pi 5",
+    "text": "10. Evaluación en Raspberry Pi 5\nDespliegue de los modelos ONNX en una Raspberry Pi 5 (8 GB RAM), operando sin aceleradores dedicados (NPU/TPU).\n\n\n\n\n\n\n\n\n\n\nModelo\nLat. Media (ms)\nLat. P95 (ms)\nFPS\nViabilidad (&lt; 100 ms)\n\n\n\n\nPilotNetRegressor\n32.32\n32.48\n~30\n✅ Excelente\n\n\nDroneMobileNetV3_Small\n55.10\n58.20\n~18\n✅ Viable\n\n\nDroneMobileNetV3_Large\n99.84\n105.12\n~10\n⚠️ Límite operacional\n\n\nDroneResNet18\n&gt; 350.0\n&gt; 400.0\n&lt; 3\n❌ Inviable\n\n\n\n\n* Degradación de precisión tras conversión a ONNX cuantificado: &lt; 10⁻⁵ (despreciable)."
+  },
+  {
+    "objectID": "index.html#criterio-de-eficiencia-compuesta",
+    "href": "index.html#criterio-de-eficiencia-compuesta",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "11. Criterio de eficiencia compuesta",
+    "text": "11. Criterio de eficiencia compuesta\nPara determinar el mejor compromiso, propusimos una métrica que penaliza tanto el error (RMSE) como la latencia operativa (ms) en el hardware destino.\n\nScore = α · (RMSEnorm) + β · (Latencianorm)\n\n\nPilotNet triunfa como arquitectura de despliegue por su latencia ultra-baja y robustez consistente, ideal para el ciclo rápido de control interno de un dron de ala fija.\nMobileNetV3_Large ofrece la mejor percepción, pero su tiempo de inferencia roza el presupuesto de tiempo muerto permitido por la aerodinámica (100 ms)."
+  },
+  {
+    "objectID": "index.html#nivel-de-madurez-tecnológica-trl",
+    "href": "index.html#nivel-de-madurez-tecnológica-trl",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "12. Nivel de madurez tecnológica (TRL)",
+    "text": "12. Nivel de madurez tecnológica (TRL)\n\n\n\n\nTRL 4 ✓\n\nValidación en laboratorio\n\n10 arquitecturas entrenadas con datos reales (UZH-FPV)\nMétricas globales y por dimensión consolidadas\nConversión ONNX verificada\n\n\n\n\n\nTRL 5 (parcial) ✓\n\nEntorno relevante\n\nDespliegue real en Raspberry Pi 5\nPilotNet validada con latencia &lt; 100 ms (P95 = 32.48 ms)\nPendiente: integración en lazo MAVLink\n\n\n\n\n\nTRL 6 → Futuro\n\nDemostración\n\nIntegración en lazo cerrado de control\nVuelo real sobre dron de ala fija\nDataset propio en plataforma objetivo"
+  },
+  {
+    "objectID": "index.html#conclusiones-y-trabajo-futuro",
+    "href": "index.html#conclusiones-y-trabajo-futuro",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "13. Conclusiones y trabajo futuro",
+    "text": "13. Conclusiones y trabajo futuro\nConclusiones\n\nLa integración espacio-temporal (CNN + RNN) extrae efectivamente características de flujo óptico necesarias para inferir el estado inercial.\nLas arquitecturas profundas (ResNet, EfficientNet) ofrecen retornos decrecientes en precisión a expensas de penalizaciones severas en latencia en dispositivos de borde.\nPilotNetRegressor representa el óptimo de Pareto actual para este hardware específico."
+  },
+  {
+    "objectID": "index.html#productos-derivados-y-contribuciones",
+    "href": "index.html#productos-derivados-y-contribuciones",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "14. Productos derivados y contribuciones",
+    "text": "14. Productos derivados y contribuciones\n\nBanco de pruebas de 10 arquitecturas modernas evaluadas físicamente en RPi5.\nPipeline de sincronización, entrenamiento y despliegue ONNX Open Neural Network Exchange."
+  },
+  {
+    "objectID": "index.html#gracias-por-su-atención",
+    "href": "index.html#gracias-por-su-atención",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "¡Gracias por su atención!",
+    "text": "¡Gracias por su atención!\n\nSección de preguntas"
+  },
+  {
+    "objectID": "index.html#b.-análisis-de-errores-por-dimensión-1",
+    "href": "index.html#b.-análisis-de-errores-por-dimensión-1",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "9b. Análisis de errores por dimensión",
+    "text": "9b. Análisis de errores por dimensión\n\n\n\n¿Por qué las aceleraciones (a) presentan mayor error que las velocidades angulares (ω)?\n\n\nLas velocidades angulares derivan directamente de la dinámica de rotación visible en los flujos ópticos de la cámara. En cambio, las aceleraciones lineales están fuertemente contaminadas por:\n\nLa gravedad (el vector g se mezcla con la aceleración pura del cuerpo según la orientación).\nVibraciones de alta frecuencia de motor y hélices propagadas al marco (frame).\nDinámica aerodinámica (ráfagas de viento, sustentación variable)."
+  }
+]

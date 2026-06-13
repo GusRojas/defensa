@@ -1,0 +1,4 @@
+project:
+  type: website
+  title: "Defensa de Tesis Doctoral"
+  output-dir: ../docs

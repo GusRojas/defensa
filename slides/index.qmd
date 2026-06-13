@@ -39,15 +39,16 @@ Maestría en Ciencias en Ingeniería de Cómputo — CIC-IPN — 16 de junio de 
 4. Objetivos general y específicos
 5. Metodología y adquisición de datos
 6. Arquitecturas evaluadas
+7. Modelo E2E
 :::
 
 ::: {.column width="50%"}
-7. Arquitectura general del sistema
-8. Resultados del entrenamiento
-9. Evaluación en Raspberry Pi 5
-10. Criterio de eficiencia compuesta
-11. Nivel de madurez tecnológica (TRL)
-12. Conclusiones y trabajo futuro
+8. Flujo de datos
+9. Resultados del entrenamiento
+10. Evaluación en Raspberry Pi 5
+11. Criterio de eficiencia compuesta
+12. Nivel de madurez tecnológica (TRL)
+13. Conclusiones y trabajo futuro
 :::
 :::
 
@@ -66,7 +67,7 @@ Los entornos *GPS-denied* o degradados (bosques, cañones urbanos, interferencia
 ::: {.column width="50%"}
 ::: {.callout-tip icon="false"}
 ### 🛩️ Drones de ala fija
-A diferencia de los multirrotores, tienen dinámicas no holonómicas complejas, velocidades más altas y no pueden detenerse en el aire (*hovering*).
+A diferencia de los multirrotores, vuelan a velocidades más altas y no pueden detenerse en el aire (*hovering*).
 :::
 :::
 :::
@@ -102,11 +103,11 @@ despliegue en sistemas embebidos de bajo costo.
 3. Desplegar en hardware embebido: Exportar los modelos en ONNX a una Raspberry Pi 5 para evaluar su latencia, tamaño y estabilidad frente al presupuesto temporal de vuelo.
 4. Definir criterio de selección: Proponer un índice de eficiencia global (precisión-latencia-tamaño) para determinar la arquitectura óptima para el módulo perceptual del dron.
 
-## 5. Metodología y adquisición de datos
+## 5. Metodología y adquisición de datos {.slide-densa}
 
 Se utilizó el **Dataset UZH-FPV** (Universidad de Zúrich), con datos reales de vuelos agresivos en primera persona.
 
-- **No son datos ideales:** contienen ruido real de sensores, vibraciones del marco y artefactos visuales (*motion blur*).
+- **No son datos ideales:** contienen ruido real de sensores, vibraciones del marco.
 - **Sincronización:** la IMU (alta frecuencia) y las imágenes de la cámara (baja frecuencia) se sincronizaron mediante interpolación basada en *timestamps*.
 - **Preprocesamiento:** imágenes redimensionadas a 128×128 en escala de grises para reducir el costo computacional sin perder características estructurales.
 
@@ -116,13 +117,13 @@ Se descartaron las simulaciones por no representar fielmente el ruido y las din�
 
 ## 6. Arquitecturas evaluadas
 
-Se evaluaron múltiples arquitecturas base adaptadas para integrar una rama inercial temporal (LSTM/GRU):
+Se evaluaron múltiples arquitecturas base adaptadas para integrar una rama inercial temporal :
 
 ::: columns
 ::: {.column width="50%"}
 - **PilotNetRegressor**
-- **MLP** y **ConvLSTM**
-- **DroneConvMLP**
+- **MLP** y **ConvMLP**
+- **ConvLSTM**
 - **DroneResNet18**
 - **DroneMobileNetV3** (Small y Large)
 - **DroneNav-ConvLSTM**
@@ -138,7 +139,7 @@ Las arquitecturas base se adaptaron integrando memoria temporal. Las variantes *
 :::
 :::
 
-## 7. Arquitectura general: ¿qué hace el modelo? {.slide-densa}
+## 7. Modelo E2E: ¿qué hace el modelo? {.slide-densa}
 
 ::: columns
 ::: {.column width="40%"}
@@ -172,24 +173,31 @@ ax · ay · az *(aceleraciones)*
 ::: {.callout-important icon="false"}
 ⚠ El modelo predice el estado futuro (*open-loop*). No genera comandos de actuador directamente.
 :::
+## 8. Flujo de Datos: Controlador de Vuelo y Computadora de Acompañamiento
 
-## 8. Resultados: error de predicción {.slide-densa}
+![](assets/Pipeline_global.png){width=80% fig-align="center" style="border-radius:10px;"}
+
+
+## 9. Resultados: error de predicción {.slide-densa}
 
 Métricas consolidadas de las arquitecturas más destacadas tras el entrenamiento.
 
 | Arquitectura | RMSE General | MAE General | R² Score | Tamaño |
 |---|:--:|:--:|:--:|:--:|
-| PilotNet (Custom LSTM) | 0.425 | 0.281 | 0.89 | 4.2 MB |
-| **MobileNetV3_Large** | **0.380** | **0.245** | **0.92** | 15.8 MB |
-| DroneResNet18 | 0.401 | 0.260 | 0.90 | 45.1 MB |
-| DroneNavSA-ConvLSTM | 0.395 | 0.252 | 0.91 | 20.5 MB |
+| PilotNetRegressor | 0.3754 | 0.2216 | 0.8507 | 53.36 MB |
+| **DroneMobileNetV3_Large** | **0.3717** | **0.2144** | **0.8534** | 19.68 MB |
+| DroneResNet18 | 0.3815 | 0.2151 | 0.8459 | 49.21 MB |
+| DroneNavSA-ConvLSTM_ligero | 0.3748 | 0.2300 | 0.8514 | 6.88 MB |
+| DroneNavSA-ConvLSTM_completo | 0.3774 | 0.2338 | 0.8498 | 6.77 MB |
 
-::: {style="font-size:0.6em; color:#555;"}
+::: {style="font-size:0.8em; color:#555;"}
 \* La métrica general reduce los errores de las 6 salidas a un único valor mediante una media ponderada que normaliza las magnitudes físicas dispares entre giroscopio y acelerómetro.
 :::
 
-## 8b. Análisis de errores por dimensión
+## 9b. Análisis de errores por dimensión
 
+
+## 9b. Análisis de errores por dimensión
 ::: {.callout-warning icon="false"}
 ### ¿Por qué las aceleraciones (a) presentan mayor error que las velocidades angulares (ω)?
 
@@ -200,22 +208,22 @@ Las velocidades angulares derivan directamente de la dinámica de rotación visi
 - **Dinámica aerodinámica** (ráfagas de viento, sustentación variable).
 :::
 
-## 9. Evaluación en Raspberry Pi 5 {.slide-densa}
+## 10. Evaluación en Raspberry Pi 5 {.slide-densa}
 
 Despliegue de los modelos ONNX en una **Raspberry Pi 5 (8 GB RAM)**, operando sin aceleradores dedicados (NPU/TPU).
 
 | Modelo | Lat. Media (ms) | Lat. P95 (ms) | FPS | Viabilidad (< 100 ms) |
 |---|:--:|:--:|:--:|:--|
-| **PilotNet** | [32.32]{.text-verde} | [32.48]{.text-verde} | ~30 | ✅ Excelente |
-| MobileNetV3_Small | 55.10 | 58.20 | ~18 | ✅ Viable |
-| **MobileNetV3_Large** | [99.84]{.text-ambar} | [105.12]{.text-ambar} | ~10 | ⚠️ Límite operacional |
-| DroneResNet18 | [> 350.0]{.text-guinda} | [> 400.0]{.text-guinda} | < 3 | ❌ Inviable |
+| **PilotNetRegressor** | [32.32]{.text-verde} | [32.48]{.text-verde} | ~30 | ✅ Excelente |
+| **DroneMobileNetV3_Small** | 55.10 | 58.20 | ~18 | ✅ Viable |
+| **DroneMobileNetV3_Large** | [99.84]{.text-ambar} | [105.12]{.text-ambar} | ~10 | ⚠️ Límite operacional |
+| **DroneResNet18** | [> 350.0]{.text-guinda} | [> 400.0]{.text-guinda} | < 3 | ❌ Inviable |
 
 ::: {style="font-size:0.6em;"}
 \* Degradación de precisión tras conversión a ONNX cuantificado: **< 10⁻⁵** (despreciable).
 :::
 
-## 10. Criterio de eficiencia compuesta {.slide-densa}
+## 11. Criterio de eficiencia compuesta {.slide-densa}
 
 Para determinar el mejor compromiso, propusimos una métrica que penaliza tanto el error (RMSE) como la latencia operativa (ms) en el hardware destino.
 
@@ -226,7 +234,7 @@ Score = α · (RMSE~norm~) + β · (Latencia~norm~)
 - **PilotNet** triunfa como arquitectura de despliegue por su latencia ultra-baja y robustez consistente, ideal para el ciclo rápido de control interno de un dron de ala fija.
 - **MobileNetV3_Large** ofrece la mejor percepción, pero su tiempo de inferencia roza el presupuesto de tiempo muerto permitido por la aerodinámica (100 ms).
 
-## 11. Nivel de madurez tecnológica (TRL) {.slide-densa}
+## 12. Nivel de madurez tecnológica (TRL) {.slide-densa}
 
 ::: columns
 ::: {.column width="33%"}
@@ -269,19 +277,20 @@ TRL 6 → Futuro
 :::
 :::
 
-## 12. Conclusiones y trabajo futuro
+## 13. Conclusiones y trabajo futuro
 
 ### Conclusiones {.text-guinda}
 
 - La **integración espacio-temporal (CNN + RNN)** extrae efectivamente características de flujo óptico necesarias para inferir el estado inercial.
 - Las arquitecturas profundas (ResNet, EfficientNet) ofrecen retornos decrecientes en precisión a expensas de penalizaciones severas en latencia en dispositivos de borde.
-- **PilotNet** representa el óptimo de Pareto actual para este hardware específico.
+- **PilotNetRegressor** representa el óptimo de Pareto actual para este hardware específico.
 
-### Productos derivados y contribuciones {.text-guinda}
 
-- *Benchmark* exhaustivo de 10 arquitecturas modernas evaluadas físicamente en RPi5.
-- *Pipeline* de sincronización, entrenamiento y despliegue ONNX *open-source*.
-- Artículo de investigación en revisión detallando la métrica de eficiencia propuesta.
+## 14. Productos derivados y contribuciones 
+
+- *Banco de pruebas* de 10 arquitecturas modernas evaluadas físicamente en RPi5.
+- *Pipeline* de sincronización, entrenamiento y despliegue ONNX *Open Neural Network Exchange*.
+
 
 ## ¡Gracias por su atención! {.center}
 
