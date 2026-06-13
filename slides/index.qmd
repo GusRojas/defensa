@@ -5,6 +5,7 @@ author: "Ing. Gustavo Mandujano Rojas"
 date: "2026-06-16"
 date-format: "D [de] MMMM [de] YYYY"
 lang: es
+jupyter: python3
 format:
   revealjs:
     theme: [simple, custom.scss]
@@ -17,6 +18,120 @@ format:
     center-title-slide: true
 ---
 
+```{python}
+#| output: false
+#| include: false
+
+import json
+import re
+import numpy as np
+from pathlib import Path
+from typing import Dict, List, Tuple
+import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
+import seaborn as sns
+
+# Plotly (con fallback si no está instalado)
+try:
+    import plotly.graph_objects as go
+    from plotly.subplots import make_subplots
+    import plotly.express as px
+    import plotly.io as pio
+    HAS_PLOTLY = True
+except ImportError:
+    HAS_PLOTLY = False
+    print("⚠️  Plotly no está instalado. Las gráficas interactivas no estarán disponibles.")
+    print("   Para instalarlo: pip install plotly>=6.7.0")
+
+from IPython.display import JSON
+
+# --- Estilo académico (Matplotlib) ---
+plt.style.use('seaborn-v0_8-paper')
+plt.rcParams['figure.dpi'] = 300
+plt.rcParams['savefig.dpi'] = 300
+plt.rcParams['font.size'] = 10
+plt.rcParams['axes.labelsize'] = 11
+plt.rcParams['axes.titlesize'] = 12
+plt.rcParams['xtick.labelsize'] = 9
+plt.rcParams['ytick.labelsize'] = 9
+plt.rcParams['legend.fontsize'] = 9
+plt.rcParams['figure.titlesize'] = 13
+
+# Paleta de colores fija por modelo (coherencia con el script y la tesis)
+MODEL_COLORS = {
+    'PilotNetRegressor':            '#1f77b4',  # azul
+    'MobileNetV3_large':            '#ff7f0e',  # naranja
+    'MobileNetV3_small':            '#d62728',  # rojo
+    'DroneNavSA-ConvLSTM_completo': '#bcbd22',  # oliva
+    'ConvLSTM':                     '#2ca02c',  # verde
+    'DroneResNet18':                '#17becf',  # cian
+    'MLP':                          '#9467bd',  # morado
+    'ConvMLP':                      '#8c564b',  # marrón
+    'DroneNav-ConvLSTM':            '#e377c2',  # rosa
+    'DroneNavSA-ConvLSTM':          '#7f7f7f',  # gris
+}
+_FALLBACK_COLORS = plt.rcParams['axes.prop_cycle'].by_key()['color']
+
+def get_model_color(model_name: str, idx: int = 0) -> str:
+    """Devuelve el color canónico de un modelo, con fallback por índice."""
+    return MODEL_COLORS.get(model_name, _FALLBACK_COLORS[idx % len(_FALLBACK_COLORS)])
+
+def extract_model_name(filename: str) -> str:
+    """Extrae el nombre del modelo del nombre del archivo."""
+    match = re.match(r'training_history_(.+)\.json', filename)
+    if match:
+        return match.group(1)
+    return filename.replace('.json', '')
+
+def load_model_history(filepath: Path) -> Tuple[dict, dict]:
+    """Carga el historial de entrenamiento de un archivo JSON."""
+    try:
+        with open(filepath, 'r') as f:
+            data = json.load(f)
+        history = {}
+        metadata = {}
+
+        training_fields = ['train_loss', 'val_loss', 'train_mae', 'val_mae',
+                           'train_mse', 'val_mse', 'train_accuracy', 'val_accuracy']
+        for field in training_fields:
+            if field in data and isinstance(data[field], list):
+                history[field] = data[field]
+
+        metadata_fields = ['batch_size', 'learning_rate', 'weight_decay',
+                           'epochs_trained', 'best_val_loss', 'total_time_hours']
+        for field in metadata_fields:
+            if field in data:
+                metadata[field] = data[field]
+
+        return history, metadata
+    except Exception as e:
+        print(f"⚠️  Error cargando {filepath}: {e}")
+        return None, None
+
+# Descubrir y cargar todos los modelos
+MODELS_DIR = Path("../data/mis_modelos")
+models_data: Dict[str, dict] = {}
+models_metadata: Dict[str, dict] = {}
+
+print("🔍 Buscando archivos training_history_*.json...")
+history_files = sorted(MODELS_DIR.glob("training_history_*.json"))
+
+if not history_files:
+    print(f"❌ No se encontraron archivos en {MODELS_DIR}")
+else:
+    for filepath in history_files:
+        model_name = extract_model_name(filepath.name)
+        history, metadata = load_model_history(filepath)
+        if history and 'train_loss' in history:
+            models_data[model_name] = history
+            models_metadata[model_name] = metadata
+            epochs = len(history['train_loss'])
+            has_val = 'val_loss' in history
+            print(f"✓ Cargado: {model_name} ({epochs} épocas{', con validación' if has_val else ''})")
+
+    print(f"\n📊 Total de modelos encontrados: {len(models_data)}")
+
+```
 ##  {.center}
 
 ::: {style="text-align:center;"}
@@ -115,6 +230,11 @@ Se utilizó el **Dataset UZH-FPV** (Universidad de Zúrich), con datos reales de
 Se descartaron las simulaciones por no representar fielmente el ruido y las dinámicas aerodinámicas complejas del mundo real.
 :::
 
+## 5. Metodología y adquisición de datos 
+
+![](assets/sequence_sample_2.png){width=100% fig-align="center" style="border-radius:10px;"}
+
+
 ## 6. Arquitecturas evaluadas
 
 Se evaluaron múltiples arquitecturas base adaptadas para integrar una rama inercial temporal :
@@ -177,7 +297,90 @@ ax · ay · az *(aceleraciones)*
 
 ![](assets/Pipeline_global.png){width=80% fig-align="center" style="border-radius:10px;"}
 
+## Pérdida de validación 
 
+```{python}
+#| label: val-loss-graph
+#| output: false
+
+# Comparación de pérdida de validación (interactiva)
+fig_val = go.Figure()
+
+for idx, (model_name, history) in enumerate(models_data.items()):
+    if 'val_loss' in history:
+        epochs = list(range(1, len(history['val_loss']) + 1))
+        fig_val.add_trace(go.Scatter(
+            x=epochs,
+            y=history['val_loss'],
+            mode='lines',
+            name=model_name,
+            line=dict(color=MODEL_COLORS.get(model_name, px.colors.qualitative.Plotly[idx % 10]), width=2),
+            hovertemplate='Época=%{x}<br>Val Loss=%{y:.6f}<extra>%{fullData.name}</extra>'
+        ))
+
+fig_val.update_layout(
+    title='Pérdida de Validación',
+    xaxis_title='Época',
+    yaxis_title='Pérdida (Loss)',
+    yaxis_range=[0.15, 0.3],
+    hovermode='x unified',
+    legend=dict(font=dict(size=10)),
+    template='plotly_white',
+    height=500,
+    width=1200
+)
+```
+
+```{python}
+fig_val.show()
+```
+
+## Brecha de generalización
+```{python}
+#| label: overfitting-graph
+#| output: false
+
+# Brecha de generalización (interactivo)
+has_val = any('val_loss' in hist for hist in models_data.values())
+
+if has_val:
+    fig_gap = go.Figure()
+
+    for idx, (model_name, history) in enumerate(models_data.items()):
+        if 'val_loss' in history:
+            epochs = list(range(1, len(history['train_loss']) + 1))
+            gap = np.array(history['val_loss']) - np.array(history['train_loss'])
+            fig_gap.add_trace(go.Scatter(
+                x=epochs,
+                y=gap,
+                mode='lines',
+                name=model_name,
+                line=dict(color=MODEL_COLORS.get(model_name, px.colors.qualitative.Plotly[idx % 10]), width=2),
+                hovertemplate='Época=%{x}<br>Brecha=%{y:.6f}<extra>%{fullData.name}</extra>'
+            ))
+
+    fig_gap.add_hline(y=0, line_dash="dash", line_color="black", opacity=0.5)
+    fig_gap.update_layout(
+        title='Brecha de Generalización (Overfitting)',
+        xaxis_title='Época',
+        yaxis_title='Brecha (Val Loss - Train Loss)',
+        yaxis_range=[-0.1, 0.25],
+        hovermode='x unified',
+        legend=dict(font=dict(size=10)),
+        template='plotly_white',
+        height=600,
+        width=1200
+    )
+else:
+    fig_gap = None
+    print("ℹ️  No hay datos de validación para análisis de overfitting")
+
+```
+
+```{python}
+if fig_gap:
+    fig_gap.show()
+```
 ## 9. Resultados: error de predicción {.slide-densa}
 
 Métricas consolidadas de las arquitecturas más destacadas tras el entrenamiento.
@@ -195,8 +398,70 @@ Métricas consolidadas de las arquitecturas más destacadas tras el entrenamient
 :::
 
 ## 9b. Análisis de errores por dimensión
+```{python}
+#| label: heatmap-rmse
+#| output: false
 
+# Cargar resultados guardados (si no están ya en memoria)
+import pickle
+import os
 
+RESULTS_PKL = '../notebooks/evaluation_results.pkl'
+
+# Verificar si ya hay datos en memoria
+try:
+    all_results
+    datos_en_memoria = len(all_results) > 0
+except NameError:
+    datos_en_memoria = False
+
+if datos_en_memoria:
+    print('✅ Usando resultados existentes en memoria')
+elif os.path.exists(RESULTS_PKL):
+    with open(RESULTS_PKL, 'rb') as f:
+        data = pickle.load(f)
+    all_results = data['results']
+    df_metrics = data['df_metrics']
+    df_dim_metrics = data['df_dim_metrics']
+    IMU_NAMES = data['IMU_NAMES']
+    MODEL_COLORS = data['MODEL_COLORS']
+    print(f'✅ Resultados cargados desde {RESULTS_PKL}')
+    print(f'   Modelos: {len(all_results)}')
+    print(f'   Columnas df_metrics: {list(df_metrics.columns)}')
+else:
+    print('⚠️  No hay datos en memoria ni archivo guardado.')
+    print('   Ejecuta la evaluación (celdas 1-22) para generar resultados.')
+
+# Gráfica 5: Heatmap de RMSE (Modelo vs Dimensión) — interactivo
+model_names = df_metrics['Modelo'].tolist()
+heatmap_data = []
+for model_name in model_names:
+    row = [all_results[model_name]['metrics']['per_dimension'][dim]['RMSE'] for dim in IMU_NAMES]
+    heatmap_data.append(row)
+
+fig_heatmap = go.Figure(data=go.Heatmap(
+    z=heatmap_data,
+    y=model_names,
+    x=list(IMU_NAMES),
+    colorscale='RdYlGn_r',
+    texttemplate='%{z:.4f}',
+    textfont=dict(size=10),
+    colorbar=dict(title='RMSE'),
+    hovertemplate='Modelo: %{y}<br>Dimensión: %{x}<br>RMSE: %{z:.4f}<extra></extra>'
+))
+
+fig_heatmap.update_layout(
+    title='Heatmap de RMSE — Modelos vs Dimensiones IMU (Interactivo)',
+    height=600,
+    width=900,
+    template='plotly_white',
+    xaxis=dict(tickangle=45),
+    yaxis=dict(tickangle=0)
+)
+```
+```{python}
+fig_heatmap.show()
+```
 ## 9b. Análisis de errores por dimensión
 ::: {.callout-warning icon="false"}
 ### ¿Por qué las aceleraciones (a) presentan mayor error que las velocidades angulares (ω)?
@@ -208,6 +473,64 @@ Las velocidades angulares derivan directamente de la dinámica de rotación visi
 - **Dinámica aerodinámica** (ráfagas de viento, sustentación variable).
 :::
 
+## Comparación Multidimensional 
+```{python}
+#| label: radar-multidim
+#| output: false
+
+# Gráfica 11: Radar chart — Comparación multidimensional (Top 5)
+from math import pi
+
+# Normalizar RMSE por dimensión (0-1)
+normalized_rmse = {}
+for dim_name in IMU_NAMES:
+    dim_rmses = [all_results[model]['metrics']['per_dimension'][dim_name]['RMSE']
+                 for model in df_metrics['Modelo']]
+    max_rmse, min_rmse = max(dim_rmses), min(dim_rmses)
+    for model in df_metrics['Modelo']:
+        rmse = all_results[model]['metrics']['per_dimension'][dim_name]['RMSE']
+        norm_val = 1 - ((rmse - min_rmse) / (max_rmse - min_rmse + 1e-8))
+        normalized_rmse.setdefault(model, []).append(norm_val)
+
+top_5_models = df_metrics.head(5)['Modelo'].tolist()
+
+fig_radar5 = go.Figure()
+
+for model_name in top_5_models:
+    values = normalized_rmse[model_name] + normalized_rmse[model_name][:1]
+    theta = list(IMU_NAMES) + [IMU_NAMES[0]]
+    color = MODEL_COLORS.get(model_name, '#333333')
+
+    fig_radar5.add_trace(go.Scatterpolar(
+        r=values,
+        theta=theta,
+        mode='lines+markers',
+        name=model_name,
+        line=dict(color=color, width=2),
+        marker=dict(size=6),
+        fill='toself',
+        fillcolor=f'rgba({int(color.lstrip("#")[0:2],16)},{int(color.lstrip("#")[2:4],16)},{int(color.lstrip("#")[4:6],16)},0.15)' if color.startswith('#') else color,
+        hovertemplate='%{theta}<br>Rendimiento: %{r:.3f}<extra>%{fullData.name}</extra>'
+    ))
+
+fig_radar5.update_layout(
+    title='Comparación Multidimensional — Top 5 Modelos',
+    template='plotly_white',
+    polar=dict(
+        radialaxis=dict(visible=True, range=[0, 1.05],
+                       tickvals=[0.2, 0.4, 0.6, 0.8, 1.0],
+                       ticktext=['0.2', '0.4', '0.6', '0.8', '1.0']),
+        angularaxis=dict(tickfont=dict(size=12))
+    ),
+    height=600,
+    width=800,
+    legend=dict(x=1.1, y=1)
+)
+
+```
+```{python}
+fig_radar5.show()
+```
 ## 10. Evaluación en Raspberry Pi 5 {.slide-densa}
 
 Despliegue de los modelos ONNX en una **Raspberry Pi 5 (8 GB RAM)**, operando sin aceleradores dedicados (NPU/TPU).

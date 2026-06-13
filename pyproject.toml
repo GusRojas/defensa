@@ -8,6 +8,7 @@ dependencies = [
     "h5py>=3.8.0",
     "ipykernel>=6.22.0",
     "jupyter>=1.0.0",
+    "lark==1.2.2",
     "matplotlib>=3.7.0",
     "numpy>=1.24.0",
     "onnx>=1.14.0",
@@ -23,4 +24,9 @@ dependencies = [
     "torch>=2.0.0",
     "torchvision>=0.15.0",
     "tqdm>=4.65.0",
+]
+
+[tool.uv]
+override-dependencies = [
+    "lark==1.2.2",
 ]

@@ -138,5 +138,33 @@
     "title": "Sistema de visión para navegación autónoma de dron de ala fija",
     "section": "9b. Análisis de errores por dimensión",
     "text": "9b. Análisis de errores por dimensión\n\n\n\n¿Por qué las aceleraciones (a) presentan mayor error que las velocidades angulares (ω)?\n\n\nLas velocidades angulares derivan directamente de la dinámica de rotación visible en los flujos ópticos de la cámara. En cambio, las aceleraciones lineales están fuertemente contaminadas por:\n\nLa gravedad (el vector g se mezcla con la aceleración pura del cuerpo según la orientación).\nVibraciones de alta frecuencia de motor y hélices propagadas al marco (frame).\nDinámica aerodinámica (ráfagas de viento, sustentación variable)."
+  },
+  {
+    "objectID": "index.html#metodología-y-adquisición-de-datos-1",
+    "href": "index.html#metodología-y-adquisición-de-datos-1",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "5. Metodología y adquisición de datos",
+    "text": "5. Metodología y adquisición de datos"
+  },
+  {
+    "objectID": "index.html#pérdida-de-validación",
+    "href": "index.html#pérdida-de-validación",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "Pérdida de validación",
+    "text": "Pérdida de validación"
+  },
+  {
+    "objectID": "index.html#brecha-de-generalización",
+    "href": "index.html#brecha-de-generalización",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "Brecha de generalización",
+    "text": "Brecha de generalización"
+  },
+  {
+    "objectID": "index.html#comparación-multidimensional",
+    "href": "index.html#comparación-multidimensional",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "Comparación Multidimensional",
+    "text": "Comparación Multidimensional"
   }
 ]
