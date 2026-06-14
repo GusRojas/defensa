@@ -37,6 +37,7 @@ try:
     from plotly.subplots import make_subplots
     import plotly.express as px
     import plotly.io as pio
+    pio.renderers.default = "notebook_connected"
     HAS_PLOTLY = True
 except ImportError:
     HAS_PLOTLY = False
@@ -328,7 +329,7 @@ fig_val.update_layout(
     template='plotly_white',
     height=500,
     width=1200
-)
+);
 ```
 
 ```{python}
@@ -370,7 +371,7 @@ if has_val:
         template='plotly_white',
         height=600,
         width=1200
-    )
+    );
 else:
     fig_gap = None
     print("ℹ️  No hay datos de validación para análisis de overfitting")
@@ -457,7 +458,7 @@ fig_heatmap.update_layout(
     template='plotly_white',
     xaxis=dict(tickangle=45),
     yaxis=dict(tickangle=0)
-)
+);
 ```
 ```{python}
 fig_heatmap.show()
@@ -525,7 +526,7 @@ fig_radar5.update_layout(
     height=600,
     width=800,
     legend=dict(x=1.1, y=1)
-)
+);
 
 ```
 ```{python}
@@ -537,27 +538,38 @@ Despliegue de los modelos ONNX en una **Raspberry Pi 5 (8 GB RAM)**, operando si
 
 | Modelo | Lat. Media (ms) | Lat. P95 (ms) | FPS | Viabilidad (< 100 ms) |
 |---|:--:|:--:|:--:|:--|
-| **PilotNetRegressor** | [32.32]{.text-verde} | [32.48]{.text-verde} | ~30 | ✅ Excelente |
-| **DroneMobileNetV3_Small** | 55.10 | 58.20 | ~18 | ✅ Viable |
-| **DroneMobileNetV3_Large** | [99.84]{.text-ambar} | [105.12]{.text-ambar} | ~10 | ⚠️ Límite operacional |
-| **DroneResNet18** | [> 350.0]{.text-guinda} | [> 400.0]{.text-guinda} | < 3 | ❌ Inviable |
+| **PilotNetRegressor** | [32.32]{.text-verde} | [32.48]{.text-verde} | 30.94 | ✅ Excelente |
+| **DroneMobileNetV3_Small** | 24.76 | 25.15 | 40.40 | ✅ Excelente |
+| **DroneMobileNetV3_Large** | [99.84]{.text-ambar} | [100.53]{.text-ambar} | 10.02 | ⚠️ Límite operacional |
+| **DroneResNet18** | [293.87]{.text-guinda} | [312.76]{.text-guinda} | 3.40 | ❌ Inviable |
 
 ::: {style="font-size:0.6em;"}
 \* Degradación de precisión tras conversión a ONNX cuantificado: **< 10⁻⁵** (despreciable).
 :::
 
-## 11. Criterio de eficiencia compuesta {.slide-densa}
+## {.center}
 
-Para determinar el mejor compromiso, propusimos una métrica que penaliza tanto el error (RMSE) como la latencia operativa (ms) en el hardware destino.
+![](assets/latency_vs_accuracy_rpi5.png){width=100% fig-align="center" style="border-radius:10px;"}
 
-::: {.formula-box}
-Score = α · (RMSE~norm~) + β · (Latencia~norm~)
-:::
+## 11. Criterio de eficiencia compuesta
 
-- **PilotNet** triunfa como arquitectura de despliegue por su latencia ultra-baja y robustez consistente, ideal para el ciclo rápido de control interno de un dron de ala fija.
-- **MobileNetV3_Large** ofrece la mejor percepción, pero su tiempo de inferencia roza el presupuesto de tiempo muerto permitido por la aerodinámica (100 ms).
+![](assets/efficiency_score_rpi5.png){width=100% fig-align="center" style="border-radius:10px;"}
 
-## 12. Nivel de madurez tecnológica (TRL) {.slide-densa}
+## 12. Patrones de atención 
+![](assets/mobilenetv3_fig03.png){width=100% fig-align="center" style="border-radius:10px;"}
+
+## 12b. Patrones de atención 
+![](assets/mobilenetv3_fig05.png){width=100% fig-align="center" style="border-radius:10px;"}
+
+## 12c. Patrones de atención 
+![](assets/pilotnet_fig01.png){width=100% fig-align="center" style="border-radius:10px;"}
+
+## 12d. Patrones de atención 
+![](assets/pilotnet_fig02.png){width=100% fig-align="center" style="border-radius:10px;"}
+
+
+
+## 13. Nivel de madurez tecnológica (TRL) {.slide-densa}
 
 ::: columns
 ::: {.column width="33%"}

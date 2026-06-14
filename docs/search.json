@@ -95,21 +95,21 @@
     "href": "index.html#evaluación-en-raspberry-pi-5",
     "title": "Sistema de visión para navegación autónoma de dron de ala fija",
     "section": "10. Evaluación en Raspberry Pi 5",
-    "text": "10. Evaluación en Raspberry Pi 5\nDespliegue de los modelos ONNX en una Raspberry Pi 5 (8 GB RAM), operando sin aceleradores dedicados (NPU/TPU).\n\n\n\n\n\n\n\n\n\n\nModelo\nLat. Media (ms)\nLat. P95 (ms)\nFPS\nViabilidad (&lt; 100 ms)\n\n\n\n\nPilotNetRegressor\n32.32\n32.48\n~30\n✅ Excelente\n\n\nDroneMobileNetV3_Small\n55.10\n58.20\n~18\n✅ Viable\n\n\nDroneMobileNetV3_Large\n99.84\n105.12\n~10\n⚠️ Límite operacional\n\n\nDroneResNet18\n&gt; 350.0\n&gt; 400.0\n&lt; 3\n❌ Inviable\n\n\n\n\n* Degradación de precisión tras conversión a ONNX cuantificado: &lt; 10⁻⁵ (despreciable)."
+    "text": "10. Evaluación en Raspberry Pi 5\nDespliegue de los modelos ONNX en una Raspberry Pi 5 (8 GB RAM), operando sin aceleradores dedicados (NPU/TPU).\n\n\n\n\n\n\n\n\n\n\nModelo\nLat. Media (ms)\nLat. P95 (ms)\nFPS\nViabilidad (&lt; 100 ms)\n\n\n\n\nPilotNetRegressor\n32.32\n32.48\n30.94\n✅ Excelente\n\n\nDroneMobileNetV3_Small\n24.76\n25.15\n40.40\n✅ Excelente\n\n\nDroneMobileNetV3_Large\n99.84\n100.53\n10.02\n⚠️ Límite operacional\n\n\nDroneResNet18\n293.87\n312.76\n3.40\n❌ Inviable\n\n\n\n\n* Degradación de precisión tras conversión a ONNX cuantificado: &lt; 10⁻⁵ (despreciable)."
   },
   {
     "objectID": "index.html#criterio-de-eficiencia-compuesta",
     "href": "index.html#criterio-de-eficiencia-compuesta",
     "title": "Sistema de visión para navegación autónoma de dron de ala fija",
     "section": "11. Criterio de eficiencia compuesta",
-    "text": "11. Criterio de eficiencia compuesta\nPara determinar el mejor compromiso, propusimos una métrica que penaliza tanto el error (RMSE) como la latencia operativa (ms) en el hardware destino.\n\nScore = α · (RMSEnorm) + β · (Latencianorm)\n\n\nPilotNet triunfa como arquitectura de despliegue por su latencia ultra-baja y robustez consistente, ideal para el ciclo rápido de control interno de un dron de ala fija.\nMobileNetV3_Large ofrece la mejor percepción, pero su tiempo de inferencia roza el presupuesto de tiempo muerto permitido por la aerodinámica (100 ms)."
+    "text": "11. Criterio de eficiencia compuesta"
   },
   {
     "objectID": "index.html#nivel-de-madurez-tecnológica-trl",
     "href": "index.html#nivel-de-madurez-tecnológica-trl",
     "title": "Sistema de visión para navegación autónoma de dron de ala fija",
-    "section": "12. Nivel de madurez tecnológica (TRL)",
-    "text": "12. Nivel de madurez tecnológica (TRL)\n\n\n\n\nTRL 4 (parcial) ✓\n\nValidación en laboratorio\n\n10 arquitecturas entrenadas con datos reales (UZH-FPV)\nMétricas globales y por dimensión consolidadas\nConversión ONNX verificada\n\n\n\n\n\nTRL 5 (parcial) ✓\n\nEntorno relevante\n\nDespliegue real en Raspberry Pi 5\nPilotNet validada con latencia &lt; 100 ms (P95 = 32.48 ms)\nPendiente: integración en lazo MAVLink\n\n\n\n\n\nTRL 6 → Futuro\n\nDemostración\n\nIntegración en lazo cerrado de control\nVuelo real sobre dron de ala fija\nDataset propio en plataforma objetivo"
+    "section": "13. Nivel de madurez tecnológica (TRL)",
+    "text": "13. Nivel de madurez tecnológica (TRL)\n\n\n\n\nTRL 4 (parcial) ✓\n\nValidación en laboratorio\n\n10 arquitecturas entrenadas con datos reales (UZH-FPV)\nMétricas globales y por dimensión consolidadas\nConversión ONNX verificada\n\n\n\n\n\nTRL 5 (parcial) ✓\n\nEntorno relevante\n\nDespliegue real en Raspberry Pi 5\nPilotNet validada con latencia &lt; 100 ms (P95 = 32.48 ms)\nPendiente: integración en lazo MAVLink\n\n\n\n\n\nTRL 6 → Futuro\n\nDemostración\n\nIntegración en lazo cerrado de control\nVuelo real sobre dron de ala fija\nDataset propio en plataforma objetivo"
   },
   {
     "objectID": "index.html#conclusiones-y-trabajo-futuro",
@@ -166,5 +166,40 @@
     "title": "Sistema de visión para navegación autónoma de dron de ala fija",
     "section": "Comparación Multidimensional",
     "text": "Comparación Multidimensional"
+  },
+  {
+    "objectID": "index.html#analisis-de-compromiso-precisión-latencia",
+    "href": "index.html#analisis-de-compromiso-precisión-latencia",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "Analisis de compromiso precisión-latencia",
+    "text": "Analisis de compromiso precisión-latencia"
+  },
+  {
+    "objectID": "index.html#patrones-de-atención",
+    "href": "index.html#patrones-de-atención",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "12. Patrones de atención",
+    "text": "12. Patrones de atención"
+  },
+  {
+    "objectID": "index.html#b.-patrones-de-atención",
+    "href": "index.html#b.-patrones-de-atención",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "12b. Patrones de atención",
+    "text": "12b. Patrones de atención"
+  },
+  {
+    "objectID": "index.html#c.-patrones-de-atención",
+    "href": "index.html#c.-patrones-de-atención",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "12c. Patrones de atención",
+    "text": "12c. Patrones de atención"
+  },
+  {
+    "objectID": "index.html#d.-patrones-de-atención",
+    "href": "index.html#d.-patrones-de-atención",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "12d. Patrones de atención",
+    "text": "12d. Patrones de atención"
   }
 ]
