@@ -25,7 +25,7 @@
     "href": "index.html#definición-del-problema",
     "title": "Sistema de visión para navegación autónoma de dron de ala fija",
     "section": "2. Definición del problema",
-    "text": "2. Definición del problema\nEl problema concreto: predecir el estado inercial futuro de un dron de ala fija basándose únicamente en su percepción visual e inercial pasada, con restricciones de hardware estricto.\n\n\n\n📖 Brecha en la literatura\n\n\nExiste una falta de bancos de pruebas comparativos en hardware embebido real (como la Raspberry Pi 5) que evalúen arquitecturas de aprendizaje profundo para la predicción de estado inercial en drones de ala fija, equilibrando precisión y latencia."
+    "text": "2. Definición del problema\nProblema: Navegar de un punto A a un punto B en un entorno desconocido utilizando únicamente sensores de bajo costo (cámara monocromática + IMU) para predecir la maniobra futura del dron, para evitar colisiones sin depender de GPS ni sistemas de posicionamiento externos.\n\n\n\n📖 Brecha en la literatura\n\n\nExiste una falta de bancos de pruebas comparativos en hardware embebido real (como la Raspberry Pi 5) que evalúen arquitecturas de aprendizaje profundo para la predicción de estado inercial en drones de ala fija, equilibrando precisión y latencia."
   },
   {
     "objectID": "index.html#hipótesis-y-justificación",
