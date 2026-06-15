@@ -11,7 +11,7 @@
     "href": "index.html#agenda",
     "title": "Sistema de visión para navegación autónoma de dron de ala fija",
     "section": "Agenda",
-    "text": "Agenda\n\n\n\nIntroducción y motivación\nDefinición del problema\nHipótesis y justificación\nObjetivos general y específicos\nMetodología y adquisición de datos\nArquitecturas evaluadas\nModelo E2E\n\n\n\nFlujo de datos\nResultados del entrenamiento\nEvaluación en Raspberry Pi 5\nCriterio de eficiencia compuesta\nNivel de madurez tecnológica (TRL)\nConclusiones y trabajo futuro"
+    "text": "Agenda\n\n\n\nIntroducción y motivación\nDefinición del problema\nHipótesis y justificación\nObjetivos general y específicos\nMetodología y adquisición de datos\nArquitecturas evaluadas\nModelo E2E\nFlujo de datos\nPlataforma aérea\nParámetros de entrenamiento\n\n\n\nResultados: error de predicción\nEvaluación en Raspberry Pi 5\nPatrones de atención\nComparación de factores\nPropuesta intermedia\nNivel de madurez tecnológica (TRL)\nValidación de hipótesis y conclusiones\nAportaciones\nTrabajo a futuro\nProductos derivados"
   },
   {
     "objectID": "index.html#introducción-y-motivación",
@@ -60,7 +60,7 @@
     "href": "index.html#arquitecturas-evaluadas",
     "title": "Sistema de visión para navegación autónoma de dron de ala fija",
     "section": "6. Arquitecturas evaluadas",
-    "text": "6. Arquitecturas evaluadas\nSe evaluaron múltiples arquitecturas base adaptadas para integrar una rama inercial temporal :\n\n\n\nPilotNetRegressor\nMLP y ConvMLP\nConvLSTM\nDroneResNet18\nDroneMobileNetV3 (Small y Large)\nDroneNav-ConvLSTM\n\n\n\nDroneNavSA-ConvLSTM (Ligero y Completo)\n\n\n\n\nNota\n\n\nLas arquitecturas base se adaptaron integrando memoria temporal. Las variantes ligeras (small/ligero) reducen parámetros para priorizar la latencia en hardware embebido, mientras que las versiones completas (large/completo) buscan maximizar la precisión predictiva."
+    "text": "6. Arquitecturas evaluadas\nSe evaluaron múltiples arquitecturas adaptadas para integrar una rama inercial temporal :\n\n\n\nPilotNetRegressor\nMLP y ConvMLP\nConvLSTM\nDroneResNet18\nDroneMobileNetV3 (Small y Large)\nDroneNav-ConvLSTM\n\n\n\nDroneNavSA-ConvLSTM (Ligero y Completo)\n\n\n\n\nNota\n\n\nLas variantes ligeras (small/ligero) reducen parámetros para priorizar la latencia en hardware embebido, mientras que las versiones completas (large/completo) buscan maximizar la precisión predictiva."
   },
   {
     "objectID": "index.html#modelo-e2e-qué-hace-el-modelo",
@@ -80,22 +80,22 @@
     "objectID": "index.html#resultados-error-de-predicción",
     "href": "index.html#resultados-error-de-predicción",
     "title": "Sistema de visión para navegación autónoma de dron de ala fija",
-    "section": "9. Resultados: error de predicción",
-    "text": "9. Resultados: error de predicción\nMétricas consolidadas de las arquitecturas más destacadas tras el entrenamiento.\n\n\n\n\n\n\n\n\n\n\nArquitectura\nRMSE General\nMAE General\nR² Score\nTamaño\n\n\n\n\nPilotNetRegressor\n0.3754\n0.2216\n0.8507\n53.36 MB\n\n\nDroneMobileNetV3_Large\n0.3717\n0.2144\n0.8534\n19.68 MB\n\n\nDroneResNet18\n0.3815\n0.2151\n0.8459\n49.21 MB\n\n\nDroneNavSA-ConvLSTM_ligero\n0.3748\n0.2300\n0.8514\n6.88 MB\n\n\nDroneNavSA-ConvLSTM_completo\n0.3774\n0.2338\n0.8498\n6.77 MB\n\n\n\n\n* La métrica general reduce los errores de las 6 salidas a un único valor mediante una media ponderada que normaliza las magnitudes físicas dispares entre giroscopio y acelerómetro."
+    "section": "11. Resultados: error de predicción",
+    "text": "11. Resultados: error de predicción\nMétricas consolidadas de las arquitecturas más destacadas tras el entrenamiento.\n\n\n\n\n\n\n\n\n\n\nArquitectura\nRMSE General\nMAE General\nR² Score\nTamaño\n\n\n\n\nPilotNetRegressor\n0.3754\n0.2216\n0.8507\n53.36 MB\n\n\nDroneMobileNetV3_Large\n0.3717\n0.2144\n0.8534\n19.68 MB\n\n\nDroneResNet18\n0.3815\n0.2151\n0.8459\n49.21 MB\n\n\nDroneNavSA-ConvLSTM_ligero\n0.3748\n0.2300\n0.8514\n6.88 MB\n\n\nDroneNavSA-ConvLSTM_completo\n0.3774\n0.2338\n0.8498\n6.77 MB\n\n\n\n\n* La métrica general reduce los errores de las 6 salidas a un único valor mediante una media ponderada que normaliza las magnitudes físicas dispares entre giroscopio y acelerómetro."
   },
   {
     "objectID": "index.html#b.-análisis-de-errores-por-dimensión",
     "href": "index.html#b.-análisis-de-errores-por-dimensión",
     "title": "Sistema de visión para navegación autónoma de dron de ala fija",
-    "section": "9b. Análisis de errores por dimensión",
-    "text": "9b. Análisis de errores por dimensión"
+    "section": "11b. Análisis de errores por dimensión",
+    "text": "11b. Análisis de errores por dimensión"
   },
   {
     "objectID": "index.html#evaluación-en-raspberry-pi-5",
     "href": "index.html#evaluación-en-raspberry-pi-5",
     "title": "Sistema de visión para navegación autónoma de dron de ala fija",
-    "section": "10. Evaluación en Raspberry Pi 5",
-    "text": "10. Evaluación en Raspberry Pi 5\nDespliegue de los modelos ONNX en una Raspberry Pi 5 (8 GB RAM), operando sin aceleradores dedicados (NPU/TPU).\n\n\n\n\n\n\n\n\n\n\nModelo\nLat. Media (ms)\nLat. P95 (ms)\nFPS\nViabilidad (&lt; 100 ms)\n\n\n\n\nPilotNetRegressor\n32.32\n32.48\n30.94\n✅ Excelente\n\n\nDroneMobileNetV3_Small\n24.76\n25.15\n40.40\n✅ Excelente\n\n\nDroneMobileNetV3_Large\n99.84\n100.53\n10.02\n⚠️ Límite operacional\n\n\nDroneResNet18\n293.87\n312.76\n3.40\n❌ Inviable\n\n\n\n\n* Degradación de precisión tras conversión a ONNX cuantificado: &lt; 10⁻⁵ (despreciable)."
+    "section": "12. Evaluación en Raspberry Pi 5",
+    "text": "12. Evaluación en Raspberry Pi 5\nDespliegue de los modelos ONNX en una Raspberry Pi 5 (8 GB RAM), operando sin aceleradores dedicados.\n\n\n\n\n\n\n\n\n\n\nModelo\nLat. Media (ms)\nLat. P95 (ms)\nFPS\nViabilidad (&lt; 100 ms)\n\n\n\n\nPilotNetRegressor\n32.32\n32.48\n30.94\n✅ Excelente\n\n\nDroneMobileNetV3_Small\n24.76\n25.15\n40.40\n✅ Excelente\n\n\nDroneMobileNetV3_Large\n99.84\n100.53\n10.02\n⚠️ Límite operacional\n\n\nDroneResNet18\n293.87\n312.76\n3.40\n❌ Inviable\n\n\n\n\n* Degradación del error tras conversión a ONNX cuantificado: &lt; 10⁻⁵ (despreciable)."
   },
   {
     "objectID": "index.html#criterio-de-eficiencia-compuesta",
@@ -108,8 +108,8 @@
     "objectID": "index.html#nivel-de-madurez-tecnológica-trl",
     "href": "index.html#nivel-de-madurez-tecnológica-trl",
     "title": "Sistema de visión para navegación autónoma de dron de ala fija",
-    "section": "13. Nivel de madurez tecnológica (TRL)",
-    "text": "13. Nivel de madurez tecnológica (TRL)\n\n\n\n\nTRL 4 (parcial) ✓\n\nValidación en laboratorio\n\n10 arquitecturas entrenadas con datos reales (UZH-FPV)\nMétricas globales y por dimensión consolidadas\nConversión ONNX verificada\n\n\n\n\n\nTRL 5 (parcial) ✓\n\nEntorno relevante\n\nDespliegue real en Raspberry Pi 5\nPilotNet validada con latencia &lt; 100 ms (P95 = 32.48 ms)\nPendiente: integración en lazo MAVLink\n\n\n\n\n\nTRL 6 → Futuro\n\nDemostración\n\nIntegración en lazo cerrado de control\nVuelo real sobre dron de ala fija\nDataset propio en plataforma objetivo"
+    "section": "16. Nivel de madurez tecnológica (TRL)",
+    "text": "16. Nivel de madurez tecnológica (TRL)\n\n\n\n\nTRL 4 (parcial) ✓\n\nValidación en laboratorio\n\n10 arquitecturas entrenadas con datos reales (UZH-FPV)\nMétricas globales y por dimensión consolidadas\nConversión ONNX verificada\n\n\n\n\n\nTRL 5 (parcial) ✓\n\nEntorno relevante\n\nDespliegue real en Raspberry Pi 5\nPilotNet validada con latencia &lt; 100 ms (P95 = 32.48 ms)\nPendiente: integración en lazo MAVLink\n\n\n\n\n\nTRL 6 → Futuro\n\nDemostración\n\nIntegración en lazo cerrado de control\nVuelo real sobre dron de ala fija\nDataset propio en plataforma objetivo"
   },
   {
     "objectID": "index.html#conclusiones-y-trabajo-futuro",
@@ -122,8 +122,8 @@
     "objectID": "index.html#productos-derivados-y-contribuciones",
     "href": "index.html#productos-derivados-y-contribuciones",
     "title": "Sistema de visión para navegación autónoma de dron de ala fija",
-    "section": "14. Productos derivados y contribuciones",
-    "text": "14. Productos derivados y contribuciones\n\nBanco de pruebas de 10 arquitecturas modernas evaluadas físicamente en RPi5.\nPipeline de sincronización, entrenamiento y despliegue ONNX Open Neural Network Exchange."
+    "section": "15. Productos derivados y contribuciones",
+    "text": "15. Productos derivados y contribuciones\n\nBanco de pruebas de 10 arquitecturas modernas evaluadas físicamente en RPi5.\nPipeline de sincronización, entrenamiento y despliegue ONNX Open Neural Network Exchange."
   },
   {
     "objectID": "index.html#gracias-por-su-atención",
@@ -136,8 +136,8 @@
     "objectID": "index.html#b.-análisis-de-errores-por-dimensión-1",
     "href": "index.html#b.-análisis-de-errores-por-dimensión-1",
     "title": "Sistema de visión para navegación autónoma de dron de ala fija",
-    "section": "9b. Análisis de errores por dimensión",
-    "text": "9b. Análisis de errores por dimensión\n\n\n\n¿Por qué las aceleraciones (a) presentan mayor error que las velocidades angulares (ω)?\n\n\nLas velocidades angulares derivan directamente de la dinámica de rotación visible en los flujos ópticos de la cámara. En cambio, las aceleraciones lineales están fuertemente contaminadas por:\n\nLa gravedad (el vector g se mezcla con la aceleración pura del cuerpo según la orientación).\nVibraciones de alta frecuencia de motor y hélices propagadas al marco (frame).\nDinámica aerodinámica (ráfagas de viento, sustentación variable)."
+    "section": "11b. Análisis de errores por dimensión",
+    "text": "11b. Análisis de errores por dimensión\n\n\n\n¿Por qué las aceleraciones (a) presentan mayor error que las velocidades angulares (ω)?\n\n\nLas velocidades angulares derivan directamente de la dinámica de rotación visible en los flujos ópticos de la cámara. En cambio, las aceleraciones lineales están fuertemente contaminadas por:\n\nLa gravedad (el vector g se mezcla con la aceleración pura del cuerpo según la orientación).\nVibraciones de alta frecuencia de motor y hélices propagadas al marco (frame).\nDinámica aerodinámica (ráfagas de viento, sustentación variable)."
   },
   {
     "objectID": "index.html#metodología-y-adquisición-de-datos-1",
@@ -178,28 +178,147 @@
     "objectID": "index.html#patrones-de-atención",
     "href": "index.html#patrones-de-atención",
     "title": "Sistema de visión para navegación autónoma de dron de ala fija",
-    "section": "12. Patrones de atención",
-    "text": "12. Patrones de atención"
+    "section": "13. Patrones de atención",
+    "text": "13. Patrones de atención"
   },
   {
     "objectID": "index.html#b.-patrones-de-atención",
     "href": "index.html#b.-patrones-de-atención",
     "title": "Sistema de visión para navegación autónoma de dron de ala fija",
-    "section": "12b. Patrones de atención",
-    "text": "12b. Patrones de atención"
+    "section": "13b. Patrones de atención",
+    "text": "13b. Patrones de atención"
   },
   {
     "objectID": "index.html#c.-patrones-de-atención",
     "href": "index.html#c.-patrones-de-atención",
     "title": "Sistema de visión para navegación autónoma de dron de ala fija",
-    "section": "12c. Patrones de atención",
-    "text": "12c. Patrones de atención"
+    "section": "13c. Patrones de atención",
+    "text": "13c. Patrones de atención"
   },
   {
     "objectID": "index.html#d.-patrones-de-atención",
     "href": "index.html#d.-patrones-de-atención",
     "title": "Sistema de visión para navegación autónoma de dron de ala fija",
-    "section": "12d. Patrones de atención",
-    "text": "12d. Patrones de atención"
+    "section": "13d. Patrones de atención",
+    "text": "13d. Patrones de atención"
+  },
+  {
+    "objectID": "index.html#conclusiones-y-aportaciones",
+    "href": "index.html#conclusiones-y-aportaciones",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "13. Conclusiones y Aportaciones",
+    "text": "13. Conclusiones y Aportaciones\nConclusiones\n\nPilotNetRegressor como la arquitectura más adecuada para la computadora de acompañamiento.\nDroneMobileNetV3_large, desempeño competitivo pero latencia límite para despliegue en RPi5.\n\nAportaciones\n\nProuesta de un marco experimental integral.\nComparación sistemática de múltiples arquitecturas.\nAnálisis detallado de fenómenos asociados a la discretización y sincronización de los datos de referencia de los sensores.\nEvaluación realista en una plataforma embebida, RPI 5.\nIntroducción de un criterio de desempeño compuesto."
+  },
+  {
+    "objectID": "index.html#conclusiones",
+    "href": "index.html#conclusiones",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "13. Conclusiones",
+    "text": "13. Conclusiones\n\nPilotNetRegressor como la arquitectura más adecuada para la computadora de acompañamiento.\nDroneMobileNetV3_large, desempeño competitivo pero latencia límite para despliegue en RPi5."
+  },
+  {
+    "objectID": "index.html#aportaciones",
+    "href": "index.html#aportaciones",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "18. Aportaciones",
+    "text": "18. Aportaciones\nEl aporte central no es identificar un modelo ganador, sino caracterizar el espacio de compromisos entre exactitud, latencia y estabilidad en latencia para despliegue embebido.\n\nPropuesta de un marco experimental integral.\nComparación sistemática de múltiples arquitecturas.\nAnálisis detallado de fenómenos asociados a la discretización y sincronización de los datos de referencia de los sensores.\nEvaluación realista en una plataforma embebida, RPI 5.\nIntroducción de un criterio de desempeño compuesto."
+  },
+  {
+    "objectID": "index.html#validación-de-hipótesis-y-conclusiones",
+    "href": "index.html#validación-de-hipótesis-y-conclusiones",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "17. Validación de hipótesis y conclusiones",
+    "text": "17. Validación de hipótesis y conclusiones\nLa hipótesis se planteó con carácter exploratorio: evaluar la viabilidad de arquitecturas con memoria temporal como módulo perceptual desplegable en hardware embebido de bajo costo.\n\nViabilidad de la familia: las arquitecturas con memoria temporal son ejecutables en el hardware objetivo. ConvLSTM operó dentro del presupuesto de latencia 28.46 ms.\nRestricción no satisfecha simultáneamente: ninguna configuración con memoria temporal alcanzó de forma conjunta los tres criterios (exactitud suficiente + latencia ≤ 100 ms + estabilidad). El mayor compromiso forzó a elegir entre exactitud y latencia.\nMejor compromiso operativo: lo ofrecieron arquitecturas feedforward más simples. PilotNetRegressor en Raspberry Pi 5 32.32 ms, DroneMobileNetV3_large en desktop."
+  },
+  {
+    "objectID": "index.html#trabajo-a-futuro",
+    "href": "index.html#trabajo-a-futuro",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "19. Trabajo a futuro",
+    "text": "19. Trabajo a futuro\n\nRecolección de conjunto del datos propio en dron de ala fija. Reducir discrepancias entre el entorno de entrenamiento y el sistema objetivo.\nValidación en vuelo real, modelo integrado en el lazo de control. (TRL 6)\nMejora de modelos, modelos predictivos multi-paso, arquitecturas híbridas que integren atención temporal y fusión explícita de información visual- inercial.\nOptimización para despliegue, uso de aceleradores e integración completa con ROS 2."
+  },
+  {
+    "objectID": "index.html#comparación-pilotnetregressor-vs-dronemobilenetv3_large",
+    "href": "index.html#comparación-pilotnetregressor-vs-dronemobilenetv3_large",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "13. Comparación PilotNetRegressor vs DroneMobileNetV3_Large",
+    "text": "13. Comparación PilotNetRegressor vs DroneMobileNetV3_Large"
+  },
+  {
+    "objectID": "index.html#comparación",
+    "href": "index.html#comparación",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "13. Comparación",
+    "text": "13. Comparación"
+  },
+  {
+    "objectID": "index.html#comparación-de-factores",
+    "href": "index.html#comparación-de-factores",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "14. Comparación de factores",
+    "text": "14. Comparación de factores"
+  },
+  {
+    "objectID": "index.html#parámetros-de-entrenamiento",
+    "href": "index.html#parámetros-de-entrenamiento",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "10. Parámetros de entrenamiento",
+    "text": "10. Parámetros de entrenamiento\n\nGPU NVIDIA RTX 4080 SUPER con 16 GB de memoria VRAM, 64 GB de RAM del sistema.\nOptimizador: Adam\nTasa de aprendizaje: 1e-4\nÉpocas: 500\n\n\n\n\n\n\n\n\n\nMétrica / Efecto\nTamaño Pequeño de lote (16,32)\nTamaño Grande de lote (256+)\n\n\n\n\nUso de Memoria VRAM\nBajo 📉\nAlto 📈 (Riesgo de OOM)\n\n\nTiempo por Época\nMás lento (menos paralelismo)\nMás rápido (mejor uso de GPU)\n\n\nDirección del Gradiente\nMás ruidoso (menos muestras)\nMás estable (más muestras)\n\n\nGeneralización (Test)\nSuele ser mejor (escapa de mínimos locales)\nPuede empeorar (riesgo de sobreajuste)"
+  },
+  {
+    "objectID": "index.html#propuesta-intermedia",
+    "href": "index.html#propuesta-intermedia",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "15. Propuesta intermedia",
+    "text": "15. Propuesta intermedia"
+  },
+  {
+    "objectID": "index.html#plataforma",
+    "href": "index.html#plataforma",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "Plataforma",
+    "text": "Plataforma"
+  },
+  {
+    "objectID": "index.html#productos-derivados",
+    "href": "index.html#productos-derivados",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "20.Productos derivados",
+    "text": "20.Productos derivados\n\nRepositorio de código abierto con scripts de entrenamiento, evaluación y despliegue.\n\nhttps://github.com/GusRojas/Evaluation-and-Comparison-of-Autonomous-Navigation-Models\nhttps://github.com/GusRojas/hawkaiV3\nhttps://github.com/GusRojas/defensa\n\nParticipación en el Congreso Internacional de Inteligencia Artificial en la H. Cámara de Diputados, 9 y 10 de Abril de 2025, Ciudad de México."
+  },
+  {
+    "objectID": "index.html#b.-secuencia-temporal-de-datos",
+    "href": "index.html#b.-secuencia-temporal-de-datos",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "5b. Secuencia temporal de datos",
+    "text": "5b. Secuencia temporal de datos"
+  },
+  {
+    "objectID": "index.html#plataforma-aérea",
+    "href": "index.html#plataforma-aérea",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "9. Plataforma aérea",
+    "text": "9. Plataforma aérea"
+  },
+  {
+    "objectID": "index.html#c.-comparación-multidimensional",
+    "href": "index.html#c.-comparación-multidimensional",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "11c. Comparación Multidimensional",
+    "text": "11c. Comparación Multidimensional"
+  },
+  {
+    "objectID": "index.html#b.-criterio-de-eficiencia-compuesta",
+    "href": "index.html#b.-criterio-de-eficiencia-compuesta",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "12b. Criterio de eficiencia compuesta",
+    "text": "12b. Criterio de eficiencia compuesta"
+  },
+  {
+    "objectID": "index.html#c.-análisis-de-errores-por-dimensión",
+    "href": "index.html#c.-análisis-de-errores-por-dimensión",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "11c. Análisis de errores por dimensión",
+    "text": "11c. Análisis de errores por dimensión\n\n\n\n¿Por qué las aceleraciones (a) presentan mayor error que las velocidades angulares (ω)?\n\n\nLas velocidades angulares derivan directamente de la dinámica de rotación visible en los flujos ópticos de la cámara. En cambio, las aceleraciones lineales están fuertemente contaminadas por:\n\nLa gravedad (el vector g se mezcla con la aceleración pura del cuerpo según la orientación).\nVibraciones de alta frecuencia de motor y hélices propagadas al marco (frame).\nDinámica aerodinámica (ráfagas de viento, sustentación variable)."
   }
 ]

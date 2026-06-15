@@ -156,15 +156,22 @@ Maestría en Ciencias en Ingeniería de Cómputo — CIC-IPN — 16 de junio de 
 5. Metodología y adquisición de datos
 6. Arquitecturas evaluadas
 7. Modelo E2E
+8. Flujo de datos
+9. Plataforma aérea
+10. Parámetros de entrenamiento
 :::
 
 ::: {.column width="50%"}
-8. Flujo de datos
-9. Resultados del entrenamiento
-10. Evaluación en Raspberry Pi 5
-11. Criterio de eficiencia compuesta
-12. Nivel de madurez tecnológica (TRL)
-13. Conclusiones y trabajo futuro
+11. Resultados: error de predicción
+12. Evaluación en Raspberry Pi 5
+13. Patrones de atención
+14. Comparación de factores
+15. Propuesta intermedia
+16. Nivel de madurez tecnológica (TRL)
+17. Validación de hipótesis y conclusiones
+18. Aportaciones
+19. Trabajo a futuro
+20. Productos derivados
 :::
 :::
 
@@ -231,14 +238,17 @@ Se utilizó el **Dataset UZH-FPV** (Universidad de Zúrich), con datos reales de
 Se descartaron las simulaciones por no representar fielmente el ruido y las dinámicas aerodinámicas complejas del mundo real.
 :::
 
-## 5. Metodología y adquisición de datos 
+## 5b. Secuencia temporal de datos 
 
 ![](assets/sequence_sample_2.png){width=100% fig-align="center" style="border-radius:10px;"}
 
+## {.center}
+
+![](assets/OODA.png){width=100% fig-align="center" style="border-radius:10px;"}
 
 ## 6. Arquitecturas evaluadas
 
-Se evaluaron múltiples arquitecturas base adaptadas para integrar una rama inercial temporal :
+Se evaluaron múltiples arquitecturas adaptadas para integrar una rama inercial temporal :
 
 ::: columns
 ::: {.column width="50%"}
@@ -255,7 +265,7 @@ Se evaluaron múltiples arquitecturas base adaptadas para integrar una rama iner
 - **DroneNavSA-ConvLSTM** (Ligero y Completo)
 
 ::: {.callout-note icon="false"}
-Las arquitecturas base se adaptaron integrando memoria temporal. Las variantes *ligeras* (small/ligero) reducen parámetros para priorizar la latencia en hardware embebido, mientras que las versiones *completas* (large/completo) buscan maximizar la precisión predictiva.
+Las variantes *ligeras* (small/ligero) reducen parámetros para priorizar la latencia en hardware embebido, mientras que las versiones *completas* (large/completo) buscan maximizar la precisión predictiva.
 :::
 :::
 :::
@@ -298,91 +308,25 @@ ax · ay · az *(aceleraciones)*
 
 ![](assets/Pipeline_global.png){width=80% fig-align="center" style="border-radius:10px;"}
 
-## Pérdida de validación 
+## 9. Plataforma aérea
 
-```{python}
-#| label: val-loss-graph
-#| output: false
+![](assets/DSC4213.jpg){width=50%  style="border-radius:10px;"}
+![](assets/esquemaStallion.png){width=49.2%  style="border-radius:10px;"}
 
-# Comparación de pérdida de validación (interactiva)
-fig_val = go.Figure()
+## 10. Parámetros de entrenamiento {.slide-densa}
+- GPU NVIDIA RTX 4080 SUPER con 16 GB de memoria VRAM, 64 GB de RAM del sistema.
+- **Optimizador:** Adam
+- **Tasa de aprendizaje:** 1e-4
+- **Épocas:** 500
 
-for idx, (model_name, history) in enumerate(models_data.items()):
-    if 'val_loss' in history:
-        epochs = list(range(1, len(history['val_loss']) + 1))
-        fig_val.add_trace(go.Scatter(
-            x=epochs,
-            y=history['val_loss'],
-            mode='lines',
-            name=model_name,
-            line=dict(color=MODEL_COLORS.get(model_name, px.colors.qualitative.Plotly[idx % 10]), width=2),
-            hovertemplate='Época=%{x}<br>Val Loss=%{y:.6f}<extra>%{fullData.name}</extra>'
-        ))
+| Métrica / Efecto | Tamaño Pequeño de lote (16,32) | Tamaño Grande de lote (256+) |
+|---|:--:|:--:|
+| Uso de Memoria VRAM | Bajo 📉 | Alto 📈 (Riesgo de OOM) |
+| Tiempo por Época | Más lento (menos paralelismo) | Más rápido (mejor uso de GPU)|
+| Dirección del Gradiente | Más ruidoso (menos muestras) | Más estable (más muestras) |
+| Generalización (Test) | Suele ser mejor (escapa de mínimos locales) | Puede empeorar (riesgo de sobreajuste) |
 
-fig_val.update_layout(
-    title='Pérdida de Validación',
-    xaxis_title='Época',
-    yaxis_title='Pérdida (Loss)',
-    yaxis_range=[0.15, 0.3],
-    hovermode='x unified',
-    legend=dict(font=dict(size=10)),
-    template='plotly_white',
-    height=500,
-    width=1200
-);
-```
-
-```{python}
-fig_val.show()
-```
-
-## Brecha de generalización
-```{python}
-#| label: overfitting-graph
-#| output: false
-
-# Brecha de generalización (interactivo)
-has_val = any('val_loss' in hist for hist in models_data.values())
-
-if has_val:
-    fig_gap = go.Figure()
-
-    for idx, (model_name, history) in enumerate(models_data.items()):
-        if 'val_loss' in history:
-            epochs = list(range(1, len(history['train_loss']) + 1))
-            gap = np.array(history['val_loss']) - np.array(history['train_loss'])
-            fig_gap.add_trace(go.Scatter(
-                x=epochs,
-                y=gap,
-                mode='lines',
-                name=model_name,
-                line=dict(color=MODEL_COLORS.get(model_name, px.colors.qualitative.Plotly[idx % 10]), width=2),
-                hovertemplate='Época=%{x}<br>Brecha=%{y:.6f}<extra>%{fullData.name}</extra>'
-            ))
-
-    fig_gap.add_hline(y=0, line_dash="dash", line_color="black", opacity=0.5)
-    fig_gap.update_layout(
-        title='Brecha de Generalización (Overfitting)',
-        xaxis_title='Época',
-        yaxis_title='Brecha (Val Loss - Train Loss)',
-        yaxis_range=[-0.1, 0.25],
-        hovermode='x unified',
-        legend=dict(font=dict(size=10)),
-        template='plotly_white',
-        height=600,
-        width=1200
-    );
-else:
-    fig_gap = None
-    print("ℹ️  No hay datos de validación para análisis de overfitting")
-
-```
-
-```{python}
-if fig_gap:
-    fig_gap.show()
-```
-## 9. Resultados: error de predicción {.slide-densa}
+## 11. Resultados: error de predicción {.slide-densa}
 
 Métricas consolidadas de las arquitecturas más destacadas tras el entrenamiento.
 
@@ -398,7 +342,7 @@ Métricas consolidadas de las arquitecturas más destacadas tras el entrenamient
 \* La métrica general reduce los errores de las 6 salidas a un único valor mediante una media ponderada que normaliza las magnitudes físicas dispares entre giroscopio y acelerómetro.
 :::
 
-## 9b. Análisis de errores por dimensión
+## 11b. Análisis de errores por dimensión
 ```{python}
 #| label: heatmap-rmse
 #| output: false
@@ -452,7 +396,7 @@ fig_heatmap = go.Figure(data=go.Heatmap(
 ))
 
 fig_heatmap.update_layout(
-    title='Heatmap de RMSE — Modelos vs Dimensiones IMU (Interactivo)',
+    title='Heatmap de RMSE — Modelos vs Dimensiones IMU',
     height=600,
     width=900,
     template='plotly_white',
@@ -463,7 +407,8 @@ fig_heatmap.update_layout(
 ```{python}
 fig_heatmap.show()
 ```
-## 9b. Análisis de errores por dimensión
+
+## 11c. Análisis de errores por dimensión
 ::: {.callout-warning icon="false"}
 ### ¿Por qué las aceleraciones (a) presentan mayor error que las velocidades angulares (ω)?
 
@@ -474,7 +419,7 @@ Las velocidades angulares derivan directamente de la dinámica de rotación visi
 - **Dinámica aerodinámica** (ráfagas de viento, sustentación variable).
 :::
 
-## Comparación Multidimensional 
+## 11c. Comparación Multidimensional 
 ```{python}
 #| label: radar-multidim
 #| output: false
@@ -532,9 +477,10 @@ fig_radar5.update_layout(
 ```{python}
 fig_radar5.show()
 ```
-## 10. Evaluación en Raspberry Pi 5 {.slide-densa}
 
-Despliegue de los modelos ONNX en una **Raspberry Pi 5 (8 GB RAM)**, operando sin aceleradores dedicados (NPU/TPU).
+## 12. Evaluación en Raspberry Pi 5 {.slide-densa}
+
+Despliegue de los modelos ONNX en una **Raspberry Pi 5 (8 GB RAM)**, operando sin aceleradores dedicados.
 
 | Modelo | Lat. Media (ms) | Lat. P95 (ms) | FPS | Viabilidad (< 100 ms) |
 |---|:--:|:--:|:--:|:--|
@@ -544,32 +490,42 @@ Despliegue de los modelos ONNX en una **Raspberry Pi 5 (8 GB RAM)**, operando si
 | **DroneResNet18** | [293.87]{.text-guinda} | [312.76]{.text-guinda} | 3.40 | ❌ Inviable |
 
 ::: {style="font-size:0.6em;"}
-\* Degradación de precisión tras conversión a ONNX cuantificado: **< 10⁻⁵** (despreciable).
+\* Degradación del error tras conversión a ONNX cuantificado: **< 10⁻⁵** (despreciable).
 :::
 
 ## {.center}
 
 ![](assets/latency_vs_accuracy_rpi5.png){width=100% fig-align="center" style="border-radius:10px;"}
 
-## 11. Criterio de eficiencia compuesta
+## {.center}
+
+![](assets/model_sizes_rpi5.png){width=100% fig-align="center" style="border-radius:10px;"}
+
+## 12b. Criterio de eficiencia compuesta
 
 ![](assets/efficiency_score_rpi5.png){width=100% fig-align="center" style="border-radius:10px;"}
 
-## 12. Patrones de atención 
+## 13. Patrones de atención 
 ![](assets/mobilenetv3_fig03.png){width=100% fig-align="center" style="border-radius:10px;"}
 
-## 12b. Patrones de atención 
+## 13b. Patrones de atención 
 ![](assets/mobilenetv3_fig05.png){width=100% fig-align="center" style="border-radius:10px;"}
 
-## 12c. Patrones de atención 
-![](assets/pilotnet_fig01.png){width=100% fig-align="center" style="border-radius:10px;"}
+## 13c. Patrones de atención 
+![](assets/pilotnet_fig01.png){width=100% fig-align="center" style="border-radius:10px;}
 
-## 12d. Patrones de atención 
+## 13d. Patrones de atención 
 ![](assets/pilotnet_fig02.png){width=100% fig-align="center" style="border-radius:10px;"}
 
+## 14. Comparación de factores
 
+![](assets/pilotnetregressor_vs_mobilenetv3.png){width=100% fig-align="center" style="border-radius:10px;"}
 
-## 13. Nivel de madurez tecnológica (TRL) {.slide-densa}
+## 15. Propuesta intermedia
+
+![](assets/propuestaIntermedia.png){width=80% fig-align="center" style="border-radius:10px;"}
+
+## 16. Nivel de madurez tecnológica (TRL) {.slide-densa}
 
 ::: columns
 ::: {.column width="33%"}
@@ -612,19 +568,45 @@ TRL 6 → Futuro
 :::
 :::
 
-## 13. Conclusiones y trabajo futuro
+## 17. Validación de hipótesis y conclusiones {.slide-densa}
 
-### Conclusiones {.text-guinda}
+ La hipótesis se planteó con carácter exploratorio: evaluar la viabilidad de arquitecturas con memoria temporal como módulo perceptual desplegable en hardware embebido de bajo costo. 
 
-- La **integración espacio-temporal (CNN + RNN)** extrae efectivamente características de flujo óptico necesarias para inferir el estado inercial.
-- Las arquitecturas profundas (ResNet, EfficientNet) ofrecen retornos decrecientes en precisión a expensas de penalizaciones severas en latencia en dispositivos de borde.
-- **PilotNetRegressor** representa el óptimo de Pareto actual para este hardware específico.
+ 1. **Viabilidad de la familia**: las arquitecturas con memoria temporal son ejecutables en el hardware objetivo. ConvLSTM operó dentro del presupuesto de latencia 28.46 ms.
+ 2. **Restricción no satisfecha simultáneamente**: ninguna configuración con memoria temporal alcanzó de forma conjunta los tres criterios (exactitud suficiente + latencia ≤ 100 ms + estabilidad). El mayor compromiso forzó a elegir entre exactitud y latencia.
+ 3. **Mejor compromiso operativo**: lo ofrecieron arquitecturas feedforward más simples. PilotNetRegressor en Raspberry Pi 5 32.32 ms, DroneMobileNetV3_large en desktop.
+ 
 
+## 18. Aportaciones 
 
-## 14. Productos derivados y contribuciones 
+El aporte central no es identificar un modelo ganador, sino caracterizar el espacio de compromisos entre exactitud, latencia y estabilidad en latencia para despliegue embebido.
 
-- *Banco de pruebas* de 10 arquitecturas modernas evaluadas físicamente en RPi5.
-- *Pipeline* de sincronización, entrenamiento y despliegue ONNX *Open Neural Network Exchange*.
+1. Propuesta de un marco experimental integral.
+2. Comparación sistemática de múltiples arquitecturas.
+3. Análisis detallado de fenómenos asociados a la discretización y sincronización de los datos de referencia de los sensores.
+4. Evaluación realista en una plataforma embebida, RPI 5.
+5. Introducción de un criterio de desempeño compuesto.
+
+## 19. Trabajo a futuro
+
+- Recolección de conjunto del datos propio en dron de ala fija. Reducir discrepancias entre el entorno de entrenamiento y el sistema objetivo.
+- Validación en vuelo real, modelo integrado en el lazo de control. (TRL 6)
+- Mejora de modelos, modelos predictivos multi-paso, arquitecturas híbridas que integren atención temporal y fusión explícita de información visual-
+inercial.
+- Optimización para despliegue, uso de aceleradores e integración completa con ROS 2.
+
+## 20.Productos derivados {.slide-densa}
+
+- Repositorio de código abierto con scripts de entrenamiento, evaluación y despliegue.
+    - https://github.com/GusRojas/Evaluation-and-Comparison-of-Autonomous-Navigation-Models 
+    - https://github.com/GusRojas/hawkaiV3
+    - https://github.com/GusRojas/defensa 
+- Participación en el Congreso Internacional de Inteligencia Artificial en la H. Cámara de Diputados, 9 y 10 de Abril de 2025, Ciudad de México.
+
+## {.center}
+
+![](assets/diputadosCam.jpg){width=50% fig-align="center" style="border-radius:10px;"}
+
 
 
 ## ¡Gracias por su atención! {.center}
