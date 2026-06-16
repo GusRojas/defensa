@@ -333,6 +333,15 @@ ax · ay · az *(aceleraciones)*
 | Dirección del Gradiente | Más ruidoso (menos muestras) | Más estable (más muestras) |
 | Generalización (Test) | Suele ser mejor (escapa de mínimos locales) | Puede empeorar (riesgo de sobreajuste) |
 
+## {.center}
+
+![](assets/loss_comparison.png){width=100% fig-align="center" style="border-radius:10px;"}
+
+## {.center}
+
+![](assets/overfitting_analysis.png){width=100% fig-align="center" style="border-radius:10px;"}
+
+
 ## 11. Resultados: error de predicción {.slide-densa}
 
 Métricas consolidadas de las arquitecturas más destacadas tras el entrenamiento.
@@ -499,6 +508,10 @@ Despliegue de los modelos ONNX en una **Raspberry Pi 5 (8 GB RAM)**, operando si
 ::: {style="font-size:0.6em;"}
 \* Degradación del error tras conversión a ONNX cuantificado: **< 10⁻⁵** (despreciable).
 :::
+
+## {.center}
+
+![](assets/latency_distribution_rpi5.png){width=100% fig-align="center" style="border-radius:10px;"}
 
 ## {.center}
 
