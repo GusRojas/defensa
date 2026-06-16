@@ -11,7 +11,7 @@
     "href": "index.html#agenda",
     "title": "Sistema de visión para navegación autónoma de dron de ala fija",
     "section": "Agenda",
-    "text": "Agenda\n\n\n\nIntroducción y motivación\nDefinición del problema\nHipótesis y justificación\nObjetivos general y específicos\nMetodología y adquisición de datos\nArquitecturas evaluadas\nModelo E2E\nFlujo de datos\nPlataforma aérea\nParámetros de entrenamiento\n\n\n\nResultados: error de predicción\nEvaluación en Raspberry Pi 5\nPatrones de atención\nComparación de factores\nPropuesta intermedia\nNivel de madurez tecnológica (TRL)\nValidación de hipótesis y conclusiones\nAportaciones\nTrabajo a futuro\nProductos derivados"
+    "text": "Agenda\n\n\n\nIntroducción y motivación\nDefinición del problema\nHipótesis y justificación\nObjetivos general y específicos\nMetodología y adquisición de datos\nArquitecturas evaluadas\nModelo, entrada y salida\nFlujo de datos\nPlataforma aérea\nParámetros de entrenamiento\n\n\n\nResultados: error de predicción\nEvaluación en Raspberry Pi 5\nPatrones de atención\nComparación de factores\nPropuesta intermedia\nNivel de madurez tecnológica (TRL)\nValidación de hipótesis y conclusiones\nAportaciones\nTrabajo a futuro\nProductos derivados"
   },
   {
     "objectID": "index.html#introducción-y-motivación",
@@ -46,7 +46,7 @@
     "href": "index.html#b.-objetivos-específicos",
     "title": "Sistema de visión para navegación autónoma de dron de ala fija",
     "section": "4b. Objetivos específicos",
-    "text": "4b. Objetivos específicos\n\nEntrenar arquitecturas DL: Implementar modelos CNN, RNN, de auto-atención e híbridos utilizando datos sincronizados de imagen e IMU (dataset UZH-FPV).\nEvaluar desempeño predictivo: Analizar la precisión mediante métricas de regresión (RMSE, MAE, \\(R^2\\)) a nivel global y por dimensión cinemática (rotación/traslación).\nDesplegar en hardware embebido: Exportar los modelos en ONNX a una Raspberry Pi 5 para evaluar su latencia, tamaño y estabilidad frente al presupuesto temporal de vuelo.\nDefinir criterio de selección: Proponer un índice de eficiencia global (precisión-latencia-tamaño) para determinar la arquitectura óptima para el módulo perceptual del dron."
+    "text": "4b. Objetivos específicos\n\nEntrenar arquitecturas: Implementar modelos CNN, RNN, de auto-atención e híbridos utilizando datos sincronizados de imagen e IMU (dataset UZH-FPV).\nEvaluar desempeño predictivo: Analizar la precisión mediante métricas de regresión (RMSE, MAE, \\(R^2\\)) a nivel global y por dimensión cinemática (rotación/traslación).\nDesplegar en hardware embebido: Exportar los modelos en ONNX a una Raspberry Pi 5 para evaluar su latencia, tamaño y estabilidad frente al presupuesto temporal de vuelo.\nDefinir criterio de selección: Proponer un índice de eficiencia global (precisión-latencia-tamaño) para determinar la arquitectura óptima para el módulo perceptual del dron."
   },
   {
     "objectID": "index.html#metodología-y-adquisición-de-datos",
@@ -283,8 +283,8 @@
     "objectID": "index.html#productos-derivados",
     "href": "index.html#productos-derivados",
     "title": "Sistema de visión para navegación autónoma de dron de ala fija",
-    "section": "20.Productos derivados",
-    "text": "20.Productos derivados\n\nRepositorio de código abierto con scripts de entrenamiento, evaluación y despliegue.\n\nhttps://github.com/GusRojas/Evaluation-and-Comparison-of-Autonomous-Navigation-Models\nhttps://github.com/GusRojas/hawkaiV3\nhttps://github.com/GusRojas/defensa\n\nParticipación en el Congreso Internacional de Inteligencia Artificial en la H. Cámara de Diputados, 9 y 10 de Abril de 2025, Ciudad de México."
+    "section": "20. Productos derivados",
+    "text": "20. Productos derivados\n\nRepositorio de código abierto con scripts de entrenamiento, evaluación y despliegue.\n\nhttps://github.com/GusRojas/Evaluation-and-Comparison-of-Autonomous-Navigation-Models\nhttps://github.com/GusRojas/defensa\n\nParticipación en el Congreso Internacional de Inteligencia Artificial en la H. Cámara de Diputados, 9 y 10 de Abril de 2025, Ciudad de México."
   },
   {
     "objectID": "index.html#b.-secuencia-temporal-de-datos",
@@ -320,5 +320,12 @@
     "title": "Sistema de visión para navegación autónoma de dron de ala fija",
     "section": "11c. Análisis de errores por dimensión",
     "text": "11c. Análisis de errores por dimensión\n\n\n\n¿Por qué las aceleraciones (a) presentan mayor error que las velocidades angulares (ω)?\n\n\nLas velocidades angulares derivan directamente de la dinámica de rotación visible en los flujos ópticos de la cámara. En cambio, las aceleraciones lineales están fuertemente contaminadas por:\n\nLa gravedad (el vector g se mezcla con la aceleración pura del cuerpo según la orientación).\nVibraciones de alta frecuencia de motor y hélices propagadas al marco (frame).\nDinámica aerodinámica (ráfagas de viento, sustentación variable)."
+  },
+  {
+    "objectID": "index.html#modelo-entrada-y-salida",
+    "href": "index.html#modelo-entrada-y-salida",
+    "title": "Sistema de visión para navegación autónoma de dron de ala fija",
+    "section": "7. Modelo, entrada y salida",
+    "text": "7. Modelo, entrada y salida\n\n\n\nENTRADA\n\nSecuencia de T = 10 imágenes monocromáticas 128×128 px (cámara FPV frontal)\nHistorial IMU: T × 6 valores (ωx, ωy, ωz, ax, ay, az) sincronizados por timestamp\n\n\n\n\nMódulo perceptual\n➔\n\n\n\nSALIDA ŷ ∈ ℝ⁶\nωx (roll) · ωy (pitch) · ωz (yaw)\nax · ay · az (aceleraciones)\n\n\n\n\n\nImportante\n\n\n⚠ El modelo predice el estado futuro (open-loop). No genera comandos de actuador directamente."
   }
 ]

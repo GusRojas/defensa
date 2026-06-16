@@ -146,3 +146,15 @@ $presentation-heading-font-weight: 800;
   padding: 0.45em;
   margin: 0.5em 0;
 }
+
+// Agenda (20 títulos en 2 columnas): reducir fuente y compactar para que entren todos
+.reveal .slides section.agenda {
+  font-size: 0.72em;            // escala global de la slide de agenda
+}
+.reveal .slides section.agenda ol {
+  margin: 0.2em 0;
+}
+.reveal .slides section.agenda li {
+  line-height: 1.2;
+  margin-bottom: 0.15em;
+}

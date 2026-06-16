@@ -145,7 +145,7 @@ else:
 Maestría en Ciencias en Ingeniería de Cómputo — CIC-IPN — 16 de junio de 2026
 :::
 
-## Agenda
+## Agenda {.slide-densa}
 
 ::: columns
 ::: {.column width="50%"}
@@ -155,7 +155,7 @@ Maestría en Ciencias en Ingeniería de Cómputo — CIC-IPN — 16 de junio de 
 4. Objetivos general y específicos
 5. Metodología y adquisición de datos
 6. Arquitecturas evaluadas
-7. Modelo E2E
+7. Modelo, entrada y salida
 8. Flujo de datos
 9. Plataforma aérea
 10. Parámetros de entrenamiento
@@ -196,7 +196,7 @@ A diferencia de los multirrotores, vuelan a velocidades más altas y no pueden d
 :::
 
 
-## 2. Definición del problema {.slides-densa}
+## 2. Definición del problema {.slide-densa}
 
 **Problema:** Navegar de un punto A a un punto B en un entorno desconocido utilizando únicamente sensores de bajo costo (cámara monocromática + IMU) para predecir la maniobra futura del dron, para evitar colisiones sin depender de GPS ni sistemas de posicionamiento externos.
 
@@ -228,7 +228,7 @@ despliegue en sistemas embebidos de bajo costo.
 
 ## 4b. Objetivos específicos {.slide-densa}
 
-1. Entrenar arquitecturas DL: Implementar modelos CNN, RNN, de auto-atención e híbridos utilizando datos sincronizados de imagen e IMU (dataset UZH-FPV).
+1. Entrenar arquitecturas: Implementar modelos CNN, RNN, de auto-atención e híbridos utilizando datos sincronizados de imagen e IMU (dataset UZH-FPV).
 2. Evaluar desempeño predictivo: Analizar la precisión mediante métricas de regresión (RMSE, MAE, $R^2$) a nivel global y por dimensión cinemática (rotación/traslación).
 3. Desplegar en hardware embebido: Exportar los modelos en ONNX a una Raspberry Pi 5 para evaluar su latencia, tamaño y estabilidad frente al presupuesto temporal de vuelo.
 4. Definir criterio de selección: Proponer un índice de eficiencia global (precisión-latencia-tamaño) para determinar la arquitectura óptima para el módulo perceptual del dron.
@@ -277,7 +277,7 @@ Las variantes *ligeras* (small/ligero) reducen parámetros para priorizar la lat
 :::
 :::
 
-## 7. Modelo E2E: ¿qué hace el modelo? {.slide-densa}
+## 7. Modelo, entrada y salida {.slide-densa}
 
 ::: columns
 ::: {.column width="40%"}
@@ -291,7 +291,7 @@ Las variantes *ligeras* (small/ligero) reducen parámetros para priorizar la lat
 
 ::: {.column width="20%"}
 ::: {.box-card .card-model}
-Módulo perceptual *(deep learning)*
+Módulo perceptual 
 
 ➔
 :::
@@ -528,6 +528,11 @@ Despliegue de los modelos ONNX en una **Raspberry Pi 5 (8 GB RAM)**, operando si
 
 ![](assets/pilotnetregressor_vs_mobilenetv3.png){width=100% fig-align="center" style="border-radius:10px;"}
 
+## {.center}
+
+![](assets/smallVSlarge.png){width=100% fig-align="center" style="border-radius:10px;"}
+
+
 ## 15. Propuesta intermedia
 
 ![](assets/propuestaIntermedia.png){width=80% fig-align="center" style="border-radius:10px;"}
@@ -602,11 +607,11 @@ El aporte central no es identificar un modelo ganador, sino caracterizar el espa
 inercial.
 - Optimización para despliegue, uso de aceleradores e integración completa con ROS 2.
 
-## 20.Productos derivados {.slide-densa}
+## 20. Productos derivados {.slide-densa}
 
 - Repositorio de código abierto con scripts de entrenamiento, evaluación y despliegue.
     - https://github.com/GusRojas/Evaluation-and-Comparison-of-Autonomous-Navigation-Models 
-    - https://github.com/GusRojas/hawkaiV3
+  
     - https://github.com/GusRojas/defensa 
 - Participación en el Congreso Internacional de Inteligencia Artificial en la H. Cámara de Diputados, 9 y 10 de Abril de 2025, Ciudad de México.
 
