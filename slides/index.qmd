@@ -231,7 +231,7 @@ despliegue en sistemas embebidos de bajo costo.
 1. Entrenar arquitecturas: Implementar modelos CNN, RNN, de auto-atención e híbridos utilizando datos sincronizados de imagen e IMU (dataset UZH-FPV).
 2. Evaluar desempeño predictivo: Analizar la precisión mediante métricas de regresión (RMSE, MAE, $R^2$) a nivel global y por dimensión cinemática (rotación/traslación).
 3. Desplegar en hardware embebido: Exportar los modelos en ONNX a una Raspberry Pi 5 para evaluar su latencia, tamaño y estabilidad frente al presupuesto temporal de vuelo.
-4. Definir criterio de selección: Proponer un índice de eficiencia global (precisión-latencia-tamaño) para determinar la arquitectura óptima para el módulo perceptual del dron.
+4. Definir criterio de selección: Proponer un índice de eficiencia global (exactitud-latencia-tamaño) para determinar la arquitectura óptima para el módulo perceptual del dron.
 
 ## 5. Metodología y adquisición de datos {.slide-densa}
 

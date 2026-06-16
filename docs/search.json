@@ -46,7 +46,7 @@
     "href": "index.html#b.-objetivos-específicos",
     "title": "Sistema de visión para navegación autónoma de dron de ala fija",
     "section": "4b. Objetivos específicos",
-    "text": "4b. Objetivos específicos\n\nEntrenar arquitecturas: Implementar modelos CNN, RNN, de auto-atención e híbridos utilizando datos sincronizados de imagen e IMU (dataset UZH-FPV).\nEvaluar desempeño predictivo: Analizar la precisión mediante métricas de regresión (RMSE, MAE, \\(R^2\\)) a nivel global y por dimensión cinemática (rotación/traslación).\nDesplegar en hardware embebido: Exportar los modelos en ONNX a una Raspberry Pi 5 para evaluar su latencia, tamaño y estabilidad frente al presupuesto temporal de vuelo.\nDefinir criterio de selección: Proponer un índice de eficiencia global (precisión-latencia-tamaño) para determinar la arquitectura óptima para el módulo perceptual del dron."
+    "text": "4b. Objetivos específicos\n\nEntrenar arquitecturas: Implementar modelos CNN, RNN, de auto-atención e híbridos utilizando datos sincronizados de imagen e IMU (dataset UZH-FPV).\nEvaluar desempeño predictivo: Analizar la precisión mediante métricas de regresión (RMSE, MAE, \\(R^2\\)) a nivel global y por dimensión cinemática (rotación/traslación).\nDesplegar en hardware embebido: Exportar los modelos en ONNX a una Raspberry Pi 5 para evaluar su latencia, tamaño y estabilidad frente al presupuesto temporal de vuelo.\nDefinir criterio de selección: Proponer un índice de eficiencia global (exactitud-latencia-tamaño) para determinar la arquitectura óptima para el módulo perceptual del dron."
   },
   {
     "objectID": "index.html#metodología-y-adquisición-de-datos",
