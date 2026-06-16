@@ -203,7 +203,7 @@ A diferencia de los multirrotores, vuelan a velocidades más altas y no pueden d
 
 ::: {.callout-warning icon="false"}
 ### 📖 Brecha en la literatura
-Existe una falta de bancos de pruebas comparativos en hardware embebido real (como la Raspberry Pi 5) que evalúen arquitecturas de aprendizaje profundo para la predicción de estado inercial en drones de ala fija, equilibrando precisión y latencia.
+Existe una falta de bancos de pruebas comparativos en hardware embebido real (como la Raspberry Pi 5) que evalúen arquitecturas de aprendizaje profundo para la predicción de estado inercial en drones de ala fija, equilibrando exactitud y latencia.
 :::
 
 ## {.center}
